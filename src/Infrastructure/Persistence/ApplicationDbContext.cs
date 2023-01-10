@@ -39,9 +39,11 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
     public DbSet<FoodDrinkOrder> FoodDrinkOrders => Set<FoodDrinkOrder>();
 
+    public DbSet<JwtSettings> JwtSettings => Set<JwtSettings>();
+
     public DbSet<Order> Orders => Set<Order>();
 
-    public DbSet<Response> Responses => Set<Response>();
+    // public DbSet<Response> Responses => Set<Response>();
 
     public DbSet<Review> Reviews => Set<Review>();
 

@@ -4,12 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Application.BankAccounts.Commands.CreateBankAccount;
 using CleanArchitecture.Application.BankAccounts.Queries.GetBankAccounts;
+// using CleanArchitecture.Application.Common.Security;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.WebUI.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebUI.Controllers
 {
+    [Authorize]
     [ApiController]
     public class BankAccountsController : ApiControllerBase
     {

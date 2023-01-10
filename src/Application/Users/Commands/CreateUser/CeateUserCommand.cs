@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using CleanArchitecture.Application.Common.Interfaces;
@@ -30,15 +32,21 @@ namespace CleanArchitecture.Application.Users.Commands.CreateUser
 
         public async Task<Response> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
+            // SHA256 hash = SHA256.Create();
+            // var passwordBytes = Encoding.Default.GetBytes(request.Password);
+            // var hashedpassword = hash.ComputeHash(passwordBytes);
+            // Convert.ToHexString(hashedpassword);
+
             var entity = new User
             {
                 Name = request.Name,
                 Email = request.Email,
-                Password = request.Password,
+                Password =  BCrypt.Net.BCrypt.HashPassword(request.Password),
                 // Phone = request.Phone,
                 Gender = request.Gender,
                 // Picture_Url = request.Picture_Url
             };
+
 
             _context.Users.Add(entity);
             await _context.SaveChangesAsync(cancellationToken);
@@ -46,7 +54,7 @@ namespace CleanArchitecture.Application.Users.Commands.CreateUser
             var response = new Response
             {
                 Status = "Ok",
-            };
+            };  
 
             return response;
         } 

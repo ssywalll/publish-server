@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 using CleanArchitecture.Application.Carts.Commands.CreateCart;
 using CleanArchitecture.Application.Carts.Commands.DeleteCart;
 using CleanArchitecture.Application.Carts.Queries.GetCarts;
+// using CleanArchitecture.Application.Common.Security;
 using CleanArchitecture.WebUI.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 
 namespace WebUI.Controllers
 {
+    [Authorize]
     [ApiController]
     public class CartsController : ApiControllerBase
     {

@@ -2,15 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+// using CleanArchitecture.Application.Common.Security;
 using CleanArchitecture.Application.Reviews.Commands.CreateReview;
 using CleanArchitecture.Application.Reviews.Commands.DeleteReview;
 using CleanArchitecture.Application.Reviews.Queries.GetReviews;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.WebUI.Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace WebUI.Controllers
 {
+    [Authorize]
     [ApiController]
     public class ReviewsController : ApiControllerBase
     {

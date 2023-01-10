@@ -15,7 +15,7 @@ using CleanArchitecture.Domain.Entities;
 
 namespace WebUI.Controllers
 {
-    // [Authorize]
+    [Authorize]
     [ApiController]
     public class FoodDrinkMenusController : ApiControllerBase
     {
@@ -36,7 +36,7 @@ namespace WebUI.Controllers
         [HttpPost]
         public async Task<ActionResult<FoodDrinkMenu>> Create(CreateFoodDrinkMenuCommand command)
         {
-            return await Mediator.Send(command);
+            return Ok(await Mediator.Send(command));
         }
 
         [HttpPut("{id}")]

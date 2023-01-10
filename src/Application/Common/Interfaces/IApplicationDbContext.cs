@@ -19,13 +19,15 @@ public interface IApplicationDbContext
     
     DbSet<FoodDrinkOrder> FoodDrinkOrders { get; }
 
+    DbSet<JwtSettings> JwtSettings { get; }
+
     DbSet<Order> Orders { get; }
 
-    DbSet<Response> Responses { get; }
+    // DbSet<Response> Responses { get; }
 
     DbSet<Review> Reviews { get; }
 
     DbSet<Tag> Tags { get; }
-    
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
