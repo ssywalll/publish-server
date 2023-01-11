@@ -59,7 +59,7 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Number = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    BankUser = table.Column<string>(name: "Bank_User", type: "text", nullable: false),
+                    BankName = table.Column<string>(name: "Bank_Name", type: "text", nullable: false),
                     UserId = table.Column<int>(name: "User_Id", type: "integer", nullable: false),
                     Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedBy = table.Column<string>(type: "text", nullable: true),
@@ -120,10 +120,7 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                     MinOrder = table.Column<int>(name: "Min_Order", type: "integer", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
                     ImageUrl = table.Column<string>(name: "Image_Url", type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                    status = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -248,6 +245,23 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(name: "User_Id", type: "integer", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    LastModified = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tags",
                 columns: table => new
                 {
@@ -294,7 +308,11 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                     Password = table.Column<string>(type: "text", nullable: false),
                     Phone = table.Column<int>(type: "integer", nullable: false),
                     Gender = table.Column<int>(type: "integer", nullable: false),
-                    PictureUrl = table.Column<string>(name: "Picture_Url", type: "text", nullable: false)
+                    PictureUrl = table.Column<string>(name: "Picture_Url", type: "text", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    LastModified = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -561,6 +579,9 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Reviews");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Tags");

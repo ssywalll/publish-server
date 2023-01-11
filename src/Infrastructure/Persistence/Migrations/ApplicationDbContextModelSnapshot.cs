@@ -30,7 +30,7 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Bank_User")
+                    b.Property<string>("Bank_Name")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -103,24 +103,12 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("text");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Image_Url")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
 
                     b.Property<int>("Min_Order")
@@ -132,6 +120,10 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
 
                     b.Property<float>("Price")
                         .HasColumnType("real");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -287,6 +279,34 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                     b.ToTable("Reviews");
                 });
 
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<int>("User_Id")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.Tag", b =>
                 {
                     b.Property<int>("Id")
@@ -402,12 +422,24 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("Gender")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()

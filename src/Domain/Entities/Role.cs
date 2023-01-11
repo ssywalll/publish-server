@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CleanArchitecture.Domain.Entities
 {
-    public class Role
+    public class Role : BaseAuditableEntity
     {
         public int User_Id { get; set ; }
     }

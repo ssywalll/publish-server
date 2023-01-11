@@ -17,8 +17,9 @@ namespace CleanArchitecture.Domain.Common
 
         public string status   // property
         {
-            get { return Status; }   // get method
-            set { Status = "Ok"; }  // set method
+            get { return status; }   // get method
+            set { status = "Ok"; }  // set method
         }
+
     }
 }

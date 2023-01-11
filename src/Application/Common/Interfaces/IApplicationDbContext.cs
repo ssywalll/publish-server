@@ -27,6 +27,8 @@ public interface IApplicationDbContext
 
     DbSet<Review> Reviews { get; }
 
+    DbSet<Role> Roles { get; }
+
     DbSet<Tag> Tags { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);

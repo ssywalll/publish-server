@@ -42,11 +42,6 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.CreateFoodDrinkM
             _context.FoodDrinkMenus.Add(entity);
             await _context.SaveChangesAsync(cancellationToken);
 
-            // var response = new Response
-            // {
-            //     Status = "Ok",
-            // };
-
             return entity; 
         }
     }
