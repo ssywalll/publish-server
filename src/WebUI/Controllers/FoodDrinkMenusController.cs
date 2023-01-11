@@ -15,7 +15,6 @@ using CleanArchitecture.Domain.Entities;
 
 namespace WebUI.Controllers
 {
-    [Authorize]
     [ApiController]
     public class FoodDrinkMenusController : ApiControllerBase
     {

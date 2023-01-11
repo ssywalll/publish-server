@@ -14,12 +14,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
-                      builder =>
-                      {
-                          builder.WithOrigins("*")
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
-                      });
+        builder =>
+            {
+                builder.WithOrigins("*")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+            });
 });
 
 // Add services to the container.

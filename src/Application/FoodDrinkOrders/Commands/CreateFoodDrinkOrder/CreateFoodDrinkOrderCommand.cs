@@ -10,7 +10,6 @@ namespace CleanArchitecture.Application.FoodDrinkOrders.Commands.CreateFoodDrink
 {
     public record CreateFoodDrinkOrderCommand : IRequest<FoodDrinkOrder>
     {
-        public int Id { get; init; }
         public int Food_Drink_Id { get; init; }
         public int Order_Number { get; init; }
     } 

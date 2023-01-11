@@ -11,7 +11,5 @@ namespace CleanArchitecture.Domain.Entities
         public string Name { get; set; } = string.Empty;
         public string Bank_Name { get; set; } = string.Empty;
         public int User_Id { get; set; }
-
-        // public User User { get; set; } = null!;
     }
 }

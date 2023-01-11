@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-// using CleanArchitecture.Application.Common.Security;
 using CleanArchitecture.Application.Reviews.Commands.CreateReview;
 using CleanArchitecture.Application.Reviews.Commands.DeleteReview;
 using CleanArchitecture.Application.Reviews.Queries.GetReviews;

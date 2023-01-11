@@ -120,7 +120,10 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                     MinOrder = table.Column<int>(name: "Min_Order", type: "integer", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
                     ImageUrl = table.Column<string>(name: "Image_Url", type: "text", nullable: false),
-                    status = table.Column<string>(type: "text", nullable: false)
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatedBy = table.Column<string>(type: "text", nullable: true),
+                    LastModified = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifiedBy = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

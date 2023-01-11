@@ -7,7 +7,7 @@ using CleanArchitecture.Domain.Entities;
 
 namespace CleanArchitecture.Application.FoodDrinkOrders.Queries.GetFoodDrinkOrders
 {
-    public class FoodDrinkOrderDto : IMapFrom<FoodDrinkMenu>
+    public class FoodDrinkOrderDto : IMapFrom<FoodDrinkOrder>
     {
         public int Id { get; set; }
         public int Food_Drink_Id { get; set; }

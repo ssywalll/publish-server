@@ -23,8 +23,6 @@ public interface IApplicationDbContext
 
     DbSet<Order> Orders { get; }
 
-    // DbSet<Response> Responses { get; }
-
     DbSet<Review> Reviews { get; }
 
     DbSet<Role> Roles { get; }

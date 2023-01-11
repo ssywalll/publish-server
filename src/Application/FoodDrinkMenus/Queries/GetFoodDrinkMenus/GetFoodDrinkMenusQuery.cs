@@ -10,7 +10,6 @@ using AutoMapper.QueryableExtensions;
 
 namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.GetFoodDrinkMenus
 {
-    // [Authorize]
     public record GetFoodDrinkMenusQuery : IRequest<FoodDrinkMenusVm>;
 
     public class GetFoodDrinkMenusQueryHandler : IRequestHandler<GetFoodDrinkMenusQuery, FoodDrinkMenusVm>

@@ -38,7 +38,6 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.CreateFoodDrinkM
                 Image_Url = request.Image_Url
             };
 
-
             _context.FoodDrinkMenus.Add(entity);
             await _context.SaveChangesAsync(cancellationToken);
 

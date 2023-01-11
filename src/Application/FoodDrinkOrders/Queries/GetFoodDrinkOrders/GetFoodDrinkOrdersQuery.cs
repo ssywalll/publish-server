@@ -27,7 +27,7 @@ namespace CleanArchitecture.Application.FoodDrinkOrders.Queries.GetFoodDrinkOrde
         {
             return new FoodDrinkOrdersVm
             {
-                Data = await _context.FoodDrinkMenus
+                Data = await _context.FoodDrinkOrders
                     .AsNoTracking()
                     .ProjectTo<FoodDrinkOrderDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken)

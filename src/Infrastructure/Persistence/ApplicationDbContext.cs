@@ -43,8 +43,6 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
     public DbSet<Order> Orders => Set<Order>();
 
-    // public DbSet<Response> Responses => Set<Response>();
-
     public DbSet<Review> Reviews => Set<Review>();
 
     public DbSet<Role> Roles => Set<Role>();
