@@ -12,16 +12,14 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Users.Commands.CreateUser
 {
-    public record CreateUserCommand : IRequest<Response>
+    public record CreateUserCommand : IRequest<User>
     {
         public string Name { get; init; } = string.Empty;
         public string Email { get; init; } = string.Empty;
         public string Password { get; init; } = string.Empty;
-        // public int Phone { get; init; }
         public Gender Gender { get; init; }
-        // public string Picture_Url { get; init ;} = string.Empty;
     }
-    public class CeateUserCommandHandler : IRequestHandler<CreateUserCommand, Response>
+    public class CeateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
     {
         private readonly IApplicationDbContext _context;
 
@@ -30,33 +28,21 @@ namespace CleanArchitecture.Application.Users.Commands.CreateUser
             _context = context;
         }
 
-        public async Task<Response> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<User> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            // SHA256 hash = SHA256.Create();
-            // var passwordBytes = Encoding.Default.GetBytes(request.Password);
-            // var hashedpassword = hash.ComputeHash(passwordBytes);
-            // Convert.ToHexString(hashedpassword);
-
             var entity = new User
             {
                 Name = request.Name,
                 Email = request.Email,
                 Password =  BCrypt.Net.BCrypt.HashPassword(request.Password),
-                // Phone = request.Phone,
                 Gender = request.Gender,
-                // Picture_Url = request.Picture_Url
             };
 
 
             _context.Users.Add(entity);
             await _context.SaveChangesAsync(cancellationToken);
 
-            var response = new Response
-            {
-                Status = "Ok",
-            };  
-
-            return response;
+            return entity;
         } 
     }
 }

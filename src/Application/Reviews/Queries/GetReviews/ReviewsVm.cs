@@ -7,6 +7,6 @@ namespace CleanArchitecture.Application.Reviews.Queries.GetReviews
 {
     public class ReviewsVm
     {
-        public IList<ReviewDto> ReviewDtos { get; set; } = new List<ReviewDto>();
+        public IList<ReviewDto> Data { get; set; } = new List<ReviewDto>();
     }
 }

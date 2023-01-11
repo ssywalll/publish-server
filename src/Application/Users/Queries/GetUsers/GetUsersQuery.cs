@@ -27,7 +27,7 @@ namespace CleanArchitecture.Application.Users.Queries.GetUsers
         {
             return new UsersVm
             {
-                UserDtos = await _context.Users
+                Data = await _context.Users
                     .AsNoTracking()
                     .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken)

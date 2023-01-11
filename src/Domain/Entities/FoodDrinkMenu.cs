@@ -1,6 +1,6 @@
 namespace CleanArchitecture.Domain.Entities
 {
-    public class FoodDrinkMenu : BaseAuditableEntity
+    public class FoodDrinkMenu : ResultResponse
     {
         public string Name { get; set; } = string.Empty;
         public float Price { get; set; }

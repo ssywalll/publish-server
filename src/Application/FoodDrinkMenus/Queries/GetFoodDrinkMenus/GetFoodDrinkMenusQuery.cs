@@ -28,10 +28,6 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.GetFoodDrinkMenus
         {
             return new FoodDrinkMenusVm
             {
-                // Response = await _context.Responses
-                //     .ProjectTo<ResponseDto>(_mapper.ConfigurationProvider)
-                //     .ToListAsync(),
-
                 Data = await _context.FoodDrinkMenus
                     .AsNoTracking()
                     .ProjectTo<FoodDrinkMenuDto>(_mapper.ConfigurationProvider)

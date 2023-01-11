@@ -7,6 +7,6 @@ namespace CleanArchitecture.Application.Carts.Queries.GetCarts
 {
     public class CartsVm
     {
-        public IList<CartDto> CartDtos { get; set; } = new List<CartDto>();
+        public IList<CartDto> Data { get; set; } = new List<CartDto>();
     }
 }

@@ -27,7 +27,7 @@ namespace CleanArchitecture.Application.Carts.Queries.GetCarts
         {
             return new CartsVm
             {
-                CartDtos = await _context.Carts
+                Data = await _context.Carts
                     .AsNoTracking()
                     .ProjectTo<CartDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken)

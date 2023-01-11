@@ -27,7 +27,7 @@ namespace CleanArchitecture.Application.Reviews.Queries.GetReviews
         {
             return new ReviewsVm
             {
-                ReviewDtos = await _context.Reviews
+                Data = await _context.Reviews
                     .AsNoTracking()
                     .ProjectTo<ReviewDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken)

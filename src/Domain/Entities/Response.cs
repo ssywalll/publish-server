@@ -10,6 +10,6 @@ namespace CleanArchitecture.Domain.Entities
         public string Status { get; set; } = string.Empty;
 
         //relationship
-        public User User { get; set; } 
+        public User User { get; set; } = null!;
     }
 }

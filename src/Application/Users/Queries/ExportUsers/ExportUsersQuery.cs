@@ -31,7 +31,7 @@ namespace CleanArchitecture.Application.Users.Queries.ExportUsers
         {
             return new UsersVm
             {
-                UserDtos = await _context.Users
+                Data = await _context.Users
                     .Where(x => x.Id == request.Id)
                     .AsNoTracking()
                     .ProjectTo<UserDto>(_mapper.ConfigurationProvider)

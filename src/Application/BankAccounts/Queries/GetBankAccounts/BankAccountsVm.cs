@@ -7,6 +7,6 @@ namespace CleanArchitecture.Application.BankAccounts.Queries.GetBankAccounts
 {
     public class BankAccountsVm
     {
-        public IList<BankAccountDto> BankAccountDtos { get; set; } = new List<BankAccountDto>();
+        public IList<BankAccountDto> Data { get; set; } = new List<BankAccountDto>();
     }
 }

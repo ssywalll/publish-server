@@ -7,6 +7,6 @@ namespace CleanArchitecture.Application.Users.Queries.GetUsers
 {
     public class UsersVm
     {
-         public IList<UserDto> UserDtos { get; set; } = new List<UserDto>();
+         public IList<UserDto> Data { get; set; } = new List<UserDto>();
     }
 }

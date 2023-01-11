@@ -27,7 +27,7 @@ namespace CleanArchitecture.Application.Tags.Queries.GetTags
         {
             return new TagsVm
             {
-                TagDtos =  await _context.Tags
+                Data =  await _context.Tags
                     .AsNoTracking()
                     .ProjectTo<TagDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken)

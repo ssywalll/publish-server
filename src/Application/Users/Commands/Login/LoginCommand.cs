@@ -18,8 +18,8 @@ namespace CleanArchitecture.Application.Users.Commands.Login
 {
     public record LoginCommand : IRequest<string>
     {
-        public string Email { get; init; }
-        public string Password { get; init; }
+        public string Email { get; init; } = string.Empty; 
+        public string Password { get; init; } = string.Empty;
     }
 
     public class LoginCommandHandler : IRequestHandler<LoginCommand, string>

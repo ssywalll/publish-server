@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.BankAccounts.Commands.CreateBankAccount
 {
@@ -12,7 +14,7 @@ namespace CleanArchitecture.Application.BankAccounts.Commands.CreateBankAccount
     {
         public int Number { get; init; }
         public string Name { get; init; } = string.Empty;
-        public string Bank_User { get; init; } = string.Empty;
+        public string Bank_Name { get; init; } = string.Empty;
         public int User_Id { get; init; }
     }
 
@@ -31,7 +33,7 @@ namespace CleanArchitecture.Application.BankAccounts.Commands.CreateBankAccount
             {
                 Number = request.Number,
                 Name = request.Name,
-                Bank_User = request.Bank_User,
+                Bank_Name = request.Bank_Name,
                 User_Id = request.User_Id
             };
 

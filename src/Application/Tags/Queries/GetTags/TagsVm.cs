@@ -7,6 +7,6 @@ namespace CleanArchitecture.Application.Tags.Queries.GetTags
 {
     public class TagsVm
     {
-        public IList<TagDto> TagDtos { get; set; } = new List<TagDto>();
+        public IList<TagDto> Data { get; set; } = new List<TagDto>();
     }
 }

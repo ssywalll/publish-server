@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace CleanArchitecture.Domain.Entities
 {
-    public class JwtSettings : BaseAuditableEntity
+    public class Role
     {
-        public string securitykey { get; set; } = string.Empty;
+        public int User_Id { get; set ; }
     }
 }
