@@ -27,6 +27,7 @@ namespace CleanArchitecture.Application.BankAccounts.Queries.GetBankAccounts
         {
             return new BankAccountsVm
             {
+                Status = "Ok",
                 Data = await _context.BankAccounts
                     .AsNoTracking()
                     .ProjectTo<BankAccountDto>(_mapper.ConfigurationProvider)

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Application.Common.Mappings;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,6 +28,7 @@ namespace CleanArchitecture.Application.Users.Queries.GetUsers
         {
             return new UsersVm
             {
+                Status = "Ok",
                 Data = await _context.Users
                     .AsNoTracking()
                     .ProjectTo<UserDto>(_mapper.ConfigurationProvider)

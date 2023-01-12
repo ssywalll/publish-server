@@ -27,6 +27,7 @@ namespace CleanArchitecture.Application.FoodDrinkOrders.Queries.GetFoodDrinkOrde
         {
             return new FoodDrinkOrdersVm
             {
+                Status = "Ok",
                 Data = await _context.FoodDrinkOrders
                     .AsNoTracking()
                     .ProjectTo<FoodDrinkOrderDto>(_mapper.ConfigurationProvider)

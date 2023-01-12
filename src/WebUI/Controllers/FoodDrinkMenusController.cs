@@ -48,7 +48,7 @@ namespace WebUI.Controllers
 
            await Mediator.Send(command);
 
-           return NoContent(); 
+           return Ok(); 
         }
 
         [HttpDelete("{id}")]
@@ -56,7 +56,7 @@ namespace WebUI.Controllers
         {
             await Mediator.Send(new DeleteFoodDrinkMenuCommand(id));
 
-            return NoContent();
+            return Ok();
         }
     }
 }

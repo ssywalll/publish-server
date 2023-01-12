@@ -27,6 +27,7 @@ namespace CleanArchitecture.Application.Reviews.Queries.GetReviews
         {
             return new ReviewsVm
             {
+                Status = "Ok",
                 Data = await _context.Reviews
                     .AsNoTracking()
                     .ProjectTo<ReviewDto>(_mapper.ConfigurationProvider)

@@ -7,6 +7,7 @@ namespace CleanArchitecture.Application.FoodDrinkOrders.Queries.GetFoodDrinkOrde
 {
     public class FoodDrinkOrdersVm
     {
+        public string Status { get; set; } = string.Empty;
          public IList<FoodDrinkOrderDto> Data { get; set; } = new List<FoodDrinkOrderDto>();
     }
 }

@@ -7,6 +7,7 @@ using MediatR;
 using AutoMapper;
 using CleanArchitecture.Application.Common.Interfaces;
 using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Application.Common.Models;
 
 namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.GetFoodDrinkMenus
 {
@@ -27,6 +28,7 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.GetFoodDrinkMenus
         {
             return new FoodDrinkMenusVm
             {
+                Status = "Ok",
                 Data = await _context.FoodDrinkMenus
                     .AsNoTracking()
                     .ProjectTo<FoodDrinkMenuDto>(_mapper.ConfigurationProvider)

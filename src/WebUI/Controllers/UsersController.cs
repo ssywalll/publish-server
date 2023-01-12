@@ -5,7 +5,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Azure.Core;
+using CleanArchitecture.Application.Common.Mappings;
 using CleanArchitecture.Application.Users.Commands.CreateUser;
 using CleanArchitecture.Application.Users.Commands.DeleteUser;
 using CleanArchitecture.Application.Users.Commands.Login;
@@ -14,10 +14,7 @@ using CleanArchitecture.Application.Users.Queries.ExportUsers;
 using CleanArchitecture.Application.Users.Queries.GetUsers;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.WebUI.Controllers;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 
 namespace WebUI.Controllers
 {
@@ -31,7 +28,7 @@ namespace WebUI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             var vm = await Mediator.Send(new ExportUsersQuery {Id = id});
 
