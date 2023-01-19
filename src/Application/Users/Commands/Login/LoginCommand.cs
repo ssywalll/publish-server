@@ -6,23 +6,25 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CleanArchitecture.Application.Users.Commands.Login
 {
-    public record LoginCommand : IRequest<string>
+    public record LoginCommand : IRequest<LoginVm>
     {
         public string Email { get; init; } = string.Empty; 
         public string Password { get; init; } = string.Empty;
     }
 
-    public class LoginCommandHandler : IRequestHandler<LoginCommand, string>
+    public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginVm>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -35,13 +37,8 @@ namespace CleanArchitecture.Application.Users.Commands.Login
             _jwtSettings = options.Value;
         }
 
-        public async Task<string> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<LoginVm> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-
-            // var entity = await _context.Users
-            //     .Where(x => x.Email == request.Email && x.Password == request.Password)
-            //     .SingleOrDefaultAsync(cancellationToken);
-            
             var entity = await _context.Users
                 .Where(x => x.Email == request.Email)
                 .SingleOrDefaultAsync(cancellationToken);
@@ -66,14 +63,23 @@ namespace CleanArchitecture.Application.Users.Commands.Login
                 Subject = new ClaimsIdentity(
                     new Claim[] { new Claim(ClaimTypes.Name, entity.Email) }
                 ),
-                Expires = DateTime.Now.AddSeconds(20),
-                SigningCredentials = new SigningCredentials( new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256)
+                Expires = DateTime.Now.AddMinutes(30),
+                SigningCredentials = new SigningCredentials( new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokendesc);
             string finalToken = tokenHandler.WriteToken(token);
 
-            return finalToken;
+            return new LoginVm
+            {
+                Status = "Ok",
+                Token = finalToken,
+                data = await _context.Users
+                    .Where(x => x.Email == entity.Email)
+                    .AsNoTracking()
+                    .ProjectTo<LoginDto>(_mapper.ConfigurationProvider)
+                    .SingleOrDefaultAsync(cancellationToken)
+            };
         }
     }
 }

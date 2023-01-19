@@ -58,23 +58,4 @@ public static class ConfigureServices
         return services;
     
     }
-
-    //  public static void ConfigurationServices(IServiceCollection services, IConfiguration configuration)
-    //     {
-    //         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    //         .AddJwtBearer(options => 
-    //         {
-    //             options.TokenValidationParameters = new IdentityModel.Tokens.TokenValidationParameters
-    //             {
-    //                 ValidateIssuer = true,
-    //                 ValidateAudience = true,
-    //                 ValidateLifetime = true,
-    //                 ValidateIssuerSigningKey = true,
-    //                 ValidIssuer = configuration["Jwt:Issuer"],
-    //                 ValidAudience = configuration["Jwt:Issuer"],
-    //                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
-    //             };
-    //         });
-    //         services.AddMvc();
-    //     }
 }

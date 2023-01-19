@@ -29,6 +29,7 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.ExportFoodDrinkMe
         {
              return new FoodDrinkMenusVm
             {
+                Status = "Ok",
                 Data = await _context.FoodDrinkMenus
                     .Where(x => x.Id == request.Id)
                     .AsNoTracking()

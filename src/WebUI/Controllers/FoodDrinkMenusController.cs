@@ -12,6 +12,7 @@ using CleanArchitecture.Application.FoodDrinkMenus.Commands.DeleteFoodDrinkMenuC
 using CleanArchitecture.Application.FoodDrinkMenus.Commands.UpdateFoodDrinkMenu;
 using CleanArchitecture.Application.FoodDrinkMenus.Queries.ExportFoodDrinkMenus;
 using CleanArchitecture.Domain.Entities;
+using CleanArchitecture.Application.Common.Models;
 
 namespace WebUI.Controllers
 {
@@ -19,9 +20,15 @@ namespace WebUI.Controllers
     public class FoodDrinkMenusController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<FoodDrinkMenusVm>> Get()
+        public async Task<ActionResult<PaginatedList<FoodDrinkMenuDto>>> Get([FromQuery] GetFoodDrinkMenuWithPagination query)
         {
-            return await Mediator.Send(new GetFoodDrinkMenusQuery());
+            return await Mediator.Send(query);
+        }
+
+        [HttpGet("name")]
+        public async Task<ActionResult<FoodDrinkMenusVm>> GetFilter([FromQuery] GetFoodDrinkMenuFilter query)
+        {
+            return await Mediator.Send(query);
         }
 
         [HttpGet("{id}")]

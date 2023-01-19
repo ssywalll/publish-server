@@ -36,7 +36,7 @@ namespace WebUI.Controllers
         }
 
         [HttpPost("Authenticate")]
-        public async Task<ActionResult<string>> Authenticate(LoginCommand command)
+        public async Task<ActionResult<LoginVm>> Authenticate(LoginCommand command)
         {
             return await Mediator.Send(command);
         }
