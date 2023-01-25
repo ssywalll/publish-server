@@ -16,7 +16,7 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.UpdateFoodDrinkM
         public float Price { get; init; }
         public int Min_Order { get; init; }
         public string Description { get; init; } = string.Empty;
-        public string Image_Url { get; init;} = string.Empty;
+        public string Image_Url { get; init; } = string.Empty;
     }
 
     public class UpdateFoodDrinkMenuCommandHandler : IRequestHandler<UpdateFoodDrinkMenuCommand>
@@ -32,19 +32,18 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.UpdateFoodDrinkM
 
         public async Task<Unit> Handle(UpdateFoodDrinkMenuCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.FoodDrinkMenus
-                .FindAsync(new object[] {request.Id}, cancellationToken);
+            var target = await _context.FoodDrinkMenus
+                .FindAsync(new object[] { request.Id }, cancellationToken);
 
-            if(entity == null)
-            {
+            if (target is null)
                 throw new NotFoundException(nameof(FoodDrinkMenus), request.Id);
-            }
+            _context.FoodDrinkMenus.Update(target);
 
-            entity.Name = request.Name;
-            entity.Price = request.Price;
-            entity.Min_Order = request.Min_Order;
-            entity.Description = request.Description;
-            entity.Image_Url = request.Image_Url;
+            target.Name = request.Name;
+            target.Price = request.Price;
+            target.Min_Order = request.Min_Order;
+            target.Description = request.Description;
+            target.Image_Url = request.Image_Url;
 
             await _context.SaveChangesAsync(cancellationToken);
 

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Application.Common.Context;
 using CleanArchitecture.Application.FoodDrinkMenus.Queries.GetFoodDrinkMenus;
+using CleanArchitecture.Domain.Common;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Enums;
 using MediatR;
@@ -38,10 +40,9 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.CreateFoodDrinkM
                 Image_Url = request.Image_Url
             };
 
-            _context.FoodDrinkMenus.Add(entity);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return entity; 
+            return await Aprizax.Insert<FoodDrinkMenu>
+            (_context, _context.FoodDrinkMenus, entity, cancellationToken);
+            //konteks, tabel konteks, record baru, cancelationToken
         }
     }
 }
