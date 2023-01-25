@@ -32,23 +32,6 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.UpdateFoodDrinkM
 
         public async Task<Unit> Handle(UpdateFoodDrinkMenuCommand request, CancellationToken cancellationToken)
         {
-            // var entity = await _context.FoodDrinkMenus
-            //     .FindAsync(new object[] {request.Id}, cancellationToken);
-
-            // if(entity == null)
-            // {
-            //     throw new NotFoundException(nameof(FoodDrinkMenus), request.Id);
-            // }
-
-            // entity.Name = request.Name;
-            // entity.Price = request.Price;
-            // entity.Min_Order = request.Min_Order;
-            // entity.Description = request.Description;
-            // entity.Image_Url = request.Image_Url;
-
-            // await _context.SaveChangesAsync(cancellationToken);
-
-            // return Unit.Value;
             var target = await _context.FoodDrinkMenus
                 .FindAsync(new object[] { request.Id }, cancellationToken);
 
