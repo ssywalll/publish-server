@@ -22,20 +22,30 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.DeleteFoodDrinkM
 
         public async Task<Unit> Handle(DeleteFoodDrinkMenuCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.FoodDrinkMenus
-                .Where(l => l.Id == request.Id)
-                .SingleOrDefaultAsync(cancellationToken);
+            // var entity = await _context.FoodDrinkMenus
+            //     .Where(l => l.Id == request.Id)
+            //     .SingleOrDefaultAsync(cancellationToken);
 
-            if( entity == null)
-            {
+            // if (entity == null)
+            // {
+            //     throw new NotFoundException(nameof(FoodDrinkMenus), request.Id);
+            // }
+
+            // _context.FoodDrinkMenus.Remove(entity);
+
+            // await _context.SaveChangesAsync(cancellationToken);
+
+            // return Unit.Value;
+            var target = await _context.FoodDrinkMenus.SingleOrDefaultAsync(
+                item => item.Id.Equals(request.Id)
+            );
+            if (target is null)
                 throw new NotFoundException(nameof(FoodDrinkMenus), request.Id);
-            }
 
-            _context.FoodDrinkMenus.Remove(entity);
-
+            _context.FoodDrinkMenus.Remove(target);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return Unit.Value;    
+            return Unit.Value;
         }
     }
 }
