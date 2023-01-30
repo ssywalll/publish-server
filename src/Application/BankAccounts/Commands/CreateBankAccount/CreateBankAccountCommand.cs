@@ -12,7 +12,7 @@ namespace CleanArchitecture.Application.BankAccounts.Commands.CreateBankAccount
 {
     public record CreateBankAccountCommand : IRequest<BankAccount>
     {
-        public int Number { get; init; }
+        public string Number { get; init; } = string.Empty;
         public string Name { get; init; } = string.Empty;
         public string Bank_Name { get; init; } = string.Empty;
         public int User_Id { get; init; }
