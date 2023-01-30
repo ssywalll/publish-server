@@ -9,6 +9,7 @@ using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Application.Common.Mappings;
 using CleanArchitecture.Application.Common.Models;
+using CleanArchitecture.Application.Common.Context;
 using CleanArchitecture.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.GetFoodDrinkMenus
     {
         public string? Keyword { get; init; }
         public string? SortBy { get; init; }
+        public bool IsAsc { get; init; } = true;
         public int PageNumber { get; init; } = 1;
         public int PageSize { get; init; } = 10;
     }
@@ -41,16 +43,17 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.GetFoodDrinkMenus
                     x => (x.Name.ToLower() + x.Description.ToLower())
                     .Contains(request.Keyword.ToLower())
                 );
+
             switch (request.SortBy)
             {
                 case "Name":
-                    foodDrinkTable = foodDrinkTable.OrderBy(x => x.Name);
+                    foodDrinkTable = foodDrinkTable.OrderBySwitch(x => x.Name, request.IsAsc);
                     break;
                 case "Price":
-                    foodDrinkTable = foodDrinkTable.OrderBy(x => x.Price);
+                    foodDrinkTable = foodDrinkTable.OrderBySwitch(x => x.Price, request.IsAsc);
                     break;
                 case "Date":
-                    foodDrinkTable = foodDrinkTable.OrderBy(x => x.Created);
+                    foodDrinkTable = foodDrinkTable.OrderBySwitch(x => x.Created, request.IsAsc);
                     break;
             }
             return await foodDrinkTable
