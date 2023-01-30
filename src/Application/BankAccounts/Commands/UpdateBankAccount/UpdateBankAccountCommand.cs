@@ -8,6 +8,6 @@ namespace CleanArchitecture.Application.BankAccounts.Commands.UpdateBankAccount
 {
     public class UpdateBankAccountCommand
     {
-        
+
     }
 }
