@@ -9,6 +9,7 @@ using CleanArchitecture.WebUI.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using CleanArchitecture.Application.BankAccounts.Queries.ExportBankAccounts;
+using CleanArchitecture.Application.BankAccounts.Commands.DeleteBankAccount;
 
 namespace WebUI.Controllers
 {
@@ -27,11 +28,22 @@ namespace WebUI.Controllers
         {
             return await Mediator.Send(command);
         }
+
         [HttpGet("{Id}")]
         public async Task<IActionResult> Get(int Id)
         {
             var vm = await Mediator.Send(new ExportBankAccountsQuery { Id = Id });
             return Ok(vm);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            await Mediator.Send(new DeleteBankAccountCommand(id));
+
+            return Ok();
+        }
+
+
     }
 }
