@@ -12,7 +12,7 @@ namespace CleanArchitecture.Application.BankAccounts.Commands.CreateBankAccount
 {
     public record CreateBankAccountCommand : IRequest<BankAccount>
     {
-        public string Number { get; init; } = string.Empty;
+        public string Bank_Number { get; init; } = string.Empty;
         public string Name { get; init; } = string.Empty;
         public string Bank_Name { get; init; } = string.Empty;
         public int User_Id { get; init; }
@@ -31,7 +31,7 @@ namespace CleanArchitecture.Application.BankAccounts.Commands.CreateBankAccount
         {
             var entity = new BankAccount
             {
-                Number = request.Number,
+                Bank_Number = request.Bank_Number,
                 Name = request.Name,
                 Bank_Name = request.Bank_Name,
                 User_Id = request.User_Id
