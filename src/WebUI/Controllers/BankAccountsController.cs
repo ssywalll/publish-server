@@ -8,6 +8,7 @@ using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.WebUI.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using CleanArchitecture.Application.BankAccounts.Queries.ExportBankAccounts;
 
 namespace WebUI.Controllers
 {
@@ -25,6 +26,12 @@ namespace WebUI.Controllers
         public async Task<ActionResult<BankAccount>> Create(CreateBankAccountCommand command)
         {
             return await Mediator.Send(command);
+        }
+        [HttpGet("{Id}")]
+        public async Task<IActionResult> Get(int Id)
+        {
+            var vm = await Mediator.Send(new ExportBankAccountsQuery { Id = Id });
+            return Ok(vm);
         }
     }
 }
