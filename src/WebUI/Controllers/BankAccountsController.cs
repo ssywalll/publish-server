@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using CleanArchitecture.Application.BankAccounts.Queries.ExportBankAccounts;
 using CleanArchitecture.Application.BankAccounts.Commands.DeleteBankAccount;
+using CleanArchitecture.Application.BankAccounts.Commands.UpdateBankAccount;
 
 namespace WebUI.Controllers
 {
@@ -44,6 +45,17 @@ namespace WebUI.Controllers
             return Ok();
         }
 
+        [HttpPut("{Id}")]
+        public async Task<ActionResult> Update(int Id, UpdateBankAccountCommand command)
+        {
+            if (Id != command.Id)
+            {
+                return BadRequest();
+            }
+            await Mediator.Send(command);
+
+            return Ok();
+        }
 
     }
 }
