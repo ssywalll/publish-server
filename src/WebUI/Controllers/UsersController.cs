@@ -10,6 +10,7 @@ using CleanArchitecture.Application.Users.Commands.CreateUser;
 using CleanArchitecture.Application.Users.Commands.DeleteUser;
 using CleanArchitecture.Application.Users.Commands.Login;
 using CleanArchitecture.Application.Users.Commands.UpdateUser;
+using CleanArchitecture.Application.Users.Commands.ValidateToken;
 using CleanArchitecture.Application.Users.Queries.ExportUsers;
 using CleanArchitecture.Application.Users.Queries.GetUsers;
 using CleanArchitecture.Domain.Entities;
@@ -45,6 +46,12 @@ namespace WebUI.Controllers
         public async Task<ActionResult<User>> Create(CreateUserCommand command)
         {
             return await Mediator.Send(command);
+        }
+
+        [HttpPost("ValidateToken")]
+        public async Task<ActionResult<ValidateVm>> Validate(ValidateToken query)
+        {
+            return await Mediator.Send(query);
         }
 
         [HttpPut("{id}")]

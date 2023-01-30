@@ -39,6 +39,7 @@ namespace WebUI.Controllers
             return Ok(vm);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<ActionResult<FoodDrinkMenu>> Create(CreateFoodDrinkMenuCommand command)
         {

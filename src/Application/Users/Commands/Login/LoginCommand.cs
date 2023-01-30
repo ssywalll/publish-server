@@ -60,8 +60,13 @@ namespace CleanArchitecture.Application.Users.Commands.Login
             var tokenKey = Encoding.UTF8.GetBytes(_jwtSettings.securitykey);
             var tokendesc = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(
-                    new Claim[] { new Claim(ClaimTypes.Name, entity.Email) }
+               Subject = new ClaimsIdentity(
+                    new Claim[] 
+                    { 
+                        new Claim("id", entity.Id.ToString()),
+                        new Claim(ClaimTypes.Name, entity.Email),
+                        new Claim(ClaimTypes.Role, entity.Role)
+                    }
                 ),
                 Expires = DateTime.Now.AddMinutes(30),
                 SigningCredentials = new SigningCredentials( new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)

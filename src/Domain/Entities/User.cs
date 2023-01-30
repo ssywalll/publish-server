@@ -8,5 +8,6 @@ namespace CleanArchitecture.Domain.Entities
         public int Phone { get; set; }
         public Gender Gender { get; set; }
         public string Picture_Url { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
     }
 }

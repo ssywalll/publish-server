@@ -17,6 +17,7 @@ namespace CleanArchitecture.Application.Users.Commands.CreateUser
         public string Name { get; init; } = string.Empty;
         public string Email { get; init; } = string.Empty;
         public string Password { get; init; } = string.Empty;
+        public string Role { get; init; } = string.Empty;
         public Gender Gender { get; init; }
     }
     public class CeateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
@@ -35,6 +36,7 @@ namespace CleanArchitecture.Application.Users.Commands.CreateUser
                 Name = request.Name,
                 Email = request.Email,
                 Password =  BCrypt.Net.BCrypt.HashPassword(request.Password),
+                Role = request.Role,
                 Gender = request.Gender,
             };
 
