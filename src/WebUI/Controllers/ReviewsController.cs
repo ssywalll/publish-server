@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Application.Reviews.Commands.CreateReview;
 using CleanArchitecture.Application.Reviews.Commands.DeleteReview;
+using CleanArchitecture.Application.Reviews.Commands.UpdateReviews;
 using CleanArchitecture.Application.Reviews.Queries.ExportReviews;
 using CleanArchitecture.Application.Reviews.Queries.GetReviews;
 using CleanArchitecture.Domain.Entities;
@@ -44,5 +45,17 @@ namespace WebUI.Controllers
 
             return NoContent();
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Update(int id, UpdateReviewsCommand command)
+        {
+            if (id != command.Id)
+            {
+                return BadRequest();
+            }
+            await Mediator.Send(command);
+            return Ok();
+        }
+
     }
 }
