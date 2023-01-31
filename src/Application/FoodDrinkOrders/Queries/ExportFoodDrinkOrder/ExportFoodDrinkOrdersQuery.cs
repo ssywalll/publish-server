@@ -8,33 +8,33 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.FoodDrinkOrders.Queries.ExportFoodDrinkOrders;
 
-    public record ExportFoodDrinkOrdersQuery: IRequest<FoodDrinkOrdersVm>
+public record ExportFoodDrinkOrdersQuery : IRequest<FoodDrinkOrdersVm>
+{
+    public int Id { get; set; }
+}
+
+public class ExportFoodDrinkOrdersQueryHandler : IRequestHandler<ExportFoodDrinkOrdersQuery, FoodDrinkOrdersVm>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
+
+    public ExportFoodDrinkOrdersQueryHandler(IApplicationDbContext context, IMapper mapper)
     {
-        public int Id { get; set; }
+        _context = context;
+        _mapper = mapper;
     }
 
-    public class ExportFoodDrinkOrdersQueryHandler : IRequestHandler<ExportFoodDrinkOrdersQuery, FoodDrinkOrdersVm>
+    public async Task<FoodDrinkOrdersVm> Handle(ExportFoodDrinkOrdersQuery request, CancellationToken cancellationToken)
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-
-        public ExportFoodDrinkOrdersQueryHandler(IApplicationDbContext context, IMapper mapper)
+        return new FoodDrinkOrdersVm
         {
-            _context = context;
-            _mapper = mapper;
-        }
-
-        public async Task<FoodDrinkOrdersVm> Handle(ExportFoodDrinkOrdersQuery request, CancellationToken cancellationToken)
-        {
-             return new FoodDrinkOrdersVm
-            {
-                Data = await _context.FoodDrinkOrders
-                    .Where(x => x.Id == request.Id)
-                    .AsNoTracking()
-                    .ProjectTo<FoodDrinkOrderDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken)
-            };
-        }
-
+            Data = await _context.FoodDrinkOrders
+               .Where(x => x.Id == request.Id)
+               .AsNoTracking()
+               .ProjectTo<FoodDrinkOrderDto>(_mapper.ConfigurationProvider)
+               .ToListAsync(cancellationToken)
+        };
     }
+
+}
 
