@@ -12,5 +12,6 @@ namespace CleanArchitecture.Domain.Entities
         public int User_Id { get; set; }
         public int Food_Drink_Id { get; set; }
         public User? User { get; set; }
+        public FoodDrinkMenu? FoodDrinkMenu { get; set; }
     }
 }

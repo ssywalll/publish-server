@@ -19,6 +19,15 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
          .OnDelete(DeleteBehavior.Cascade)
          .IsRequired();
 
+        builder
+        .HasOne(t => t.FoodDrinkMenu)
+        .WithMany(c => c.Reviews)
+        .HasForeignKey(t => t.Food_Drink_Id)
+        .HasConstraintName("Fk_Review_FoodDrinkMenu")
+        .OnDelete(DeleteBehavior.Cascade)
+        .IsRequired();
+
+
 
     }
 }
