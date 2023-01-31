@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Application.Reviews.Commands.CreateReview;
 using CleanArchitecture.Application.Reviews.Commands.DeleteReview;
+using CleanArchitecture.Application.Reviews.Queries.ExportReviews;
 using CleanArchitecture.Application.Reviews.Queries.GetReviews;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.WebUI.Controllers;
@@ -21,6 +22,13 @@ namespace WebUI.Controllers
         public async Task<ActionResult<ReviewsVm>> Handle()
         {
             return await Mediator.Send(new GetReviewsQuery());
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var vm = await Mediator.Send(new ExportReviewsQuery { Id = id });
+            return Ok(vm);
         }
 
         [HttpPost]
