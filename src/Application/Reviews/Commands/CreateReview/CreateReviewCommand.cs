@@ -11,13 +11,12 @@ namespace CleanArchitecture.Application.Reviews.Commands.CreateReview
 {
     public record CreateReviewCommand : IRequest<Review>
     {
-        public int Id { get; set; }
         public Reaction Reaction { get; set; }
         public string Comment { get; set; } = string.Empty;
         public int User_Id { get; set; }
         public int Food_Drink_Id { get; set; }
-    } 
-    
+    }
+
     public class CreateReviewCommandHandler : IRequestHandler<CreateReviewCommand, Review>
     {
         private readonly IApplicationDbContext _context;
@@ -33,7 +32,6 @@ namespace CleanArchitecture.Application.Reviews.Commands.CreateReview
             {
                 Reaction = request.Reaction,
                 Comment = request.Comment,
-                User_Id = request.Id,
                 Food_Drink_Id = request.Food_Drink_Id
             };
 
