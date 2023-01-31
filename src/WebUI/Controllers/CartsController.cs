@@ -10,6 +10,8 @@ using CleanArchitecture.WebUI.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
+using CleanArchitecture.Application.Carts.Queries.ExportCarts;
+using CleanArchitecture.Application.Carts.Commands.UpdateCart;
 
 namespace WebUI.Controllers
 {
@@ -17,24 +19,44 @@ namespace WebUI.Controllers
     [ApiController]
     public class CartsController : ApiControllerBase
     {
-       [HttpGet]
+        [HttpGet]
         public async Task<ActionResult<CartsVm>> Get()
         {
             return await Mediator.Send(new GetCartsQuery());
         }
 
-       [HttpPost]
-       public async Task<ActionResult<int>> Create(CreateCartCommand command)
-       {
-        return await Mediator.Send(command);
-       }
+        [HttpGet("{id}")]
 
-       [HttpDelete("{id}")]
-       public async Task<ActionResult> Delete(int id)
-       {
+        public async Task<IActionResult> Get(int id)
+        {
+            var vm = await Mediator.Send(new ExportCartsQuery { Id = id });
+            return Ok(vm);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<int>> Create(CreateCartCommand command)
+        {
+            return await Mediator.Send(command);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
             await Mediator.Send(new DeleteCartCommand(id));
 
             return NoContent();
-       }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Update(int id, UpdateCartsCommand command)
+        {
+            if (id != command.Id)
+            {
+                return BadRequest();
+            }
+            await Mediator.Send(command);
+            return Ok();
+        }
+
     }
 }
