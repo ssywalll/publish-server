@@ -6,5 +6,6 @@ namespace CleanArchitecture.Domain.Entities
         public int Food_Drink_Id { get; set; }
         public int Quantity { get; set; }
         public FoodDrinkMenu? FoodDrinkMenu { get; set; }
+        public User? User { get; set; }
     }
 }

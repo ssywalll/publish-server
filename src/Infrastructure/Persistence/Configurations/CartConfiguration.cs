@@ -12,6 +12,14 @@ public class CartConfiguration : IEntityTypeConfiguration<Cart>
          .HasMaxLength(200);
 
         builder
+         .HasOne(t => t.User)
+         .WithMany(f => f.Carts)
+         .HasForeignKey(t => t.User_Id)
+         .HasConstraintName("Fk_Cart_User")
+         .OnDelete(DeleteBehavior.Cascade)
+         .IsRequired();
+
+        builder
          .HasOne(t => t.FoodDrinkMenu)
          .WithMany(c => c.Carts)
          .HasForeignKey(t => t.Food_Drink_Id)
