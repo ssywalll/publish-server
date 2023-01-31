@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using CleanArchitecture.Application.Carts.Queries.ExportCarts;
 using CleanArchitecture.Application.Carts.Commands.UpdateCart;
+using CleanArchitecture.Application.Common.Models;
 
 namespace WebUI.Controllers
 {
@@ -32,6 +33,12 @@ namespace WebUI.Controllers
             var vm = await Mediator.Send(new ExportCartsQuery { Id = id });
             return Ok(vm);
         }
+
+        [HttpGet("Token")]
+        public async Task<ActionResult<PaginatedList<CartDto>>> GetToken([FromQuery] GetCartByToken query)
+        {
+            return await Mediator.Send(query);
+        } 
 
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateCartCommand command)
