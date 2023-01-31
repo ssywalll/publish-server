@@ -12,6 +12,7 @@ namespace CleanArchitecture.Domain.Entities
         public List<Review>? Reviews { get; set; }
         public List<Cart>? Carts { get; set; }
         public List<BankAccount>? BankAccounts { get; set; }
+        public List<Order>? Orders { get; set; }
 
     }
 }
