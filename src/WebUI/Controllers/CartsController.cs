@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using CleanArchitecture.Application.Carts.Queries.ExportCarts;
+using CleanArchitecture.Application.Carts.Commands.UpdateCart;
 
 namespace WebUI.Controllers
 {
@@ -46,6 +47,16 @@ namespace WebUI.Controllers
             return NoContent();
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Update(int id, UpdateCartsCommand command)
+        {
+            if (id != command.Id)
+            {
+                return BadRequest();
+            }
+            await Mediator.Send(command);
+            return Ok();
+        }
 
     }
 }
