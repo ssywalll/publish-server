@@ -10,10 +10,10 @@ namespace CleanArchitecture.Application.Tags.Commands.CreateTag
 {
     public record CreateTagCommand : IRequest<Tag>
     {
-        public int Id { get; init; }
+
         public string Name { get; init; } = string.Empty;
         public int Food_Drink_Id { get; init; }
-    } 
+    }
 
     public class CreateTagCommandHandler : IRequestHandler<CreateTagCommand, Tag>
     {
@@ -36,7 +36,7 @@ namespace CleanArchitecture.Application.Tags.Commands.CreateTag
             await _context.SaveChangesAsync(cancellationToken);
 
             return entity;
-                
+
         }
     }
 }
