@@ -21,6 +21,14 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
          .OnDelete(DeleteBehavior.Cascade)
          .IsRequired();
 
+        builder
+          .HasOne(r => r.BankAccounts)
+          .WithMany(c => c.Orders)
+          .HasForeignKey(c => c.BankAccount_Id)
+          .HasConstraintName("Fk_Order_BankAccount")
+          .OnDelete(DeleteBehavior.Cascade)
+          .IsRequired();
+
 
     }
 }

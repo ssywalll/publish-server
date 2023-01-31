@@ -7,5 +7,6 @@ namespace CleanArchitecture.Domain.Entities
         public string Bank_Name { get; set; } = string.Empty;
         public int User_Id { get; set; }
         public User? Users { get; set; }
+        public List<Order>? Orders { get; set; }
     }
 }

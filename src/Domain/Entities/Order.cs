@@ -15,6 +15,8 @@ namespace CleanArchitecture.Domain.Entities
         public int Bank_Number { get; set; }
         public string Payment_Url { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
+        public int BankAccount_Id { get; set; }
         public User? users { get; set; }
+        public BankAccount? BankAccounts { get; set; }
     }
 }
