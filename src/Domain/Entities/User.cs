@@ -9,5 +9,10 @@ namespace CleanArchitecture.Domain.Entities
         public Gender Gender { get; set; }
         public string Picture_Url { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
+        public List<Review>? Reviews { get; set; }
+        public List<Cart>? Carts { get; set; }
+        public List<BankAccount>? BankAccounts { get; set; }
+        public List<Order>? Orders { get; set; }
+
     }
 }
