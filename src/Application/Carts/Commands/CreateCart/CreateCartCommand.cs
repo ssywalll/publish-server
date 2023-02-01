@@ -6,16 +6,19 @@ using CleanArchitecture.Domain.Entities;
 using MediatR;
 using CleanArchitecture.Application.Common.Interfaces;
 using AutoMapper;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace CleanArchitecture.Application.Carts.Commands.CreateCart
 {
-    public record CreateCartCommand : IRequest<int>
+    public record CreateCartCommand : IRequest<Cart>
     {
-        public int User_Id { get; init; }
+        public string Token { get; init; } = string.Empty;
         public int Food_Drink_Id { get; init; }
         public int Quantity { get; init; }
     }
-    public class CreateCartCommandHandler : IRequestHandler<CreateCartCommand ,int>
+    public class CreateCartCommandHandler : IRequestHandler<CreateCartCommand ,Cart>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -26,17 +29,50 @@ namespace CleanArchitecture.Application.Carts.Commands.CreateCart
             _mapper = mapper;
         }
 
-        public async Task<int> Handle(CreateCartCommand request, CancellationToken cancellationToken)
+        public async Task<Cart> Handle(CreateCartCommand request, CancellationToken cancellationToken)
         {
-           var entity = new Cart();
+            if(request == null)
+                return null!;
 
-           entity.User_Id = request.User_Id; 
 
-           _context.Carts.Add(entity);
+            var key = Encoding.UTF8.GetBytes("v8y/B?E(H+MbQeThWmZq3t6w9z$C&F)J@NcRfUjXn2r5u7x!A%D*G-KaPdSgVkYp");
+            var secretKey =  new SymmetricSecurityKey(key);
+            var tokenHandler = new JwtSecurityTokenHandler();
 
-           await _context.SaveChangesAsync(cancellationToken);
+            try
+            {
+                tokenHandler.ValidateToken(request.Token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    IssuerSigningKey = secretKey,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
 
-           return entity.User_Id;
+                var jwtToken = (JwtSecurityToken)validatedToken;
+                var user = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
+
+
+                var entity = new Cart
+                {
+                        User_Id = user,
+                        Food_Drink_Id = request.Food_Drink_Id,
+                        Quantity = request.Quantity
+                };
+
+
+                _context.Carts.Add(entity);
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return entity;
+            }
+            
+            catch
+            {
+                return null!;
+            }
         }
     }
 }

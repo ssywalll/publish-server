@@ -6,12 +6,12 @@ using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Enums;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.Reviews.Commands.CreateReview
 {
     public record CreateReviewCommand : IRequest<Review>
     {
-        public int Id { get; set; }
         public Reaction Reaction { get; set; }
         public string Comment { get; set; } = string.Empty;
         public int User_Id { get; set; }
@@ -33,7 +33,7 @@ namespace CleanArchitecture.Application.Reviews.Commands.CreateReview
             {
                 Reaction = request.Reaction,
                 Comment = request.Comment,
-                User_Id = request.Id,
+                User_Id = request.User_Id,
                 Food_Drink_Id = request.Food_Drink_Id
             };
 

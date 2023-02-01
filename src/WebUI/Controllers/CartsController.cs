@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using CleanArchitecture.Application.Carts.Queries.ExportCarts;
 using CleanArchitecture.Application.Carts.Commands.UpdateCart;
 using CleanArchitecture.Application.Common.Models;
+using CleanArchitecture.Domain.Entities;
 
 namespace WebUI.Controllers
 {
@@ -41,7 +42,7 @@ namespace WebUI.Controllers
         } 
 
         [HttpPost]
-        public async Task<ActionResult<int>> Create(CreateCartCommand command)
+        public async Task<ActionResult<Cart>> Create(CreateCartCommand command)
         {
             return await Mediator.Send(command);
         }

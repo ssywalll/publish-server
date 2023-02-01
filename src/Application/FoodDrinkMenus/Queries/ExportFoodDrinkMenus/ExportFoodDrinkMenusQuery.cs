@@ -9,12 +9,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.ExportFoodDrinkMenus;
 
-    public class ExportFoodDrinkMenusQuery : IRequest<FoodDrinkMenusVm>
+    public class ExportFoodDrinkMenusQuery : IRequest<ExportFoodDrinkMenusVm>
     {
         public int Id { get; set; }
     }
 
-    public class ExportFoodDrinkMenusQueryHandler : IRequestHandler<ExportFoodDrinkMenusQuery, FoodDrinkMenusVm>
+    public class ExportFoodDrinkMenusQueryHandler : IRequestHandler<ExportFoodDrinkMenusQuery, ExportFoodDrinkMenusVm>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -25,15 +25,20 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.ExportFoodDrinkMe
             _mapper = mapper;
         }
 
-        public async Task<FoodDrinkMenusVm> Handle(ExportFoodDrinkMenusQuery request, CancellationToken cancellationToken)
+        public async Task<ExportFoodDrinkMenusVm> Handle(ExportFoodDrinkMenusQuery request, CancellationToken cancellationToken)
         {
-             return new FoodDrinkMenusVm
+            return new ExportFoodDrinkMenusVm
             {
                 Status = "Ok",
                 Data = await _context.FoodDrinkMenus
                     .Where(x => x.Id == request.Id)
                     .AsNoTracking()
                     .ProjectTo<FoodDrinkMenuDto>(_mapper.ConfigurationProvider)
+                    .ToListAsync(cancellationToken),
+                Reviews = await _context.Reviews
+                    .Where(x => x.Food_Drink_Id == request.Id)
+                    .AsNoTracking()
+                    .ProjectTo<ExportFoodDrinkMenuDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken)
             };
         }

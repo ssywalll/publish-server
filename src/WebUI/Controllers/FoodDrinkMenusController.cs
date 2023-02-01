@@ -31,7 +31,7 @@ namespace WebUI.Controllers
             return await Mediator.Send(query);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}/detail")]
         public async Task<IActionResult> Get(int id)
         {
             var vm = await Mediator.Send(new ExportFoodDrinkMenusQuery {Id = id});
