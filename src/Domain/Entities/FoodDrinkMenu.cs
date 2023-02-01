@@ -9,5 +9,6 @@ namespace CleanArchitecture.Domain.Entities
         public string Image_Url { get; set; } = string.Empty;
         public List<Cart>? Carts { get; set; }
         public List<Review>? Reviews { get; set; }
+        public List<Tag>? Tags { get; set; }
     }
 }

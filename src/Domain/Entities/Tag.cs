@@ -9,5 +9,6 @@ namespace CleanArchitecture.Domain.Entities
     {
         public string Name { get; set; } = string.Empty;
         public int Food_Drink_Id { get; set; }
+        public FoodDrinkMenu? FoodDrinkMenus { get; set; }
     }
 }
