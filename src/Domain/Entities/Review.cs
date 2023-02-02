@@ -11,5 +11,7 @@ namespace CleanArchitecture.Domain.Entities
         public string Comment { get; set; } = string.Empty;
         public int User_Id { get; set; }
         public int Food_Drink_Id { get; set; }
+        public User? User { get; set; }
+        public FoodDrinkMenu? FoodDrinkMenu { get; set; }
     }
 }

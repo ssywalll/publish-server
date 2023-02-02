@@ -15,8 +15,8 @@ namespace CleanArchitecture.Application.Users.Commands.ValidateToken
 {
     public record ValidateToken : IRequest<ValidateVm>
     {
-       public string Token { get; init; } = string.Empty; 
-    } 
+        public string Token { get; init; } = string.Empty;
+    }
 
     public class ValidateTokenHandler : IRequestHandler<ValidateToken, ValidateVm>
     {
@@ -31,11 +31,11 @@ namespace CleanArchitecture.Application.Users.Commands.ValidateToken
 
         public async Task<ValidateVm> Handle(ValidateToken request, CancellationToken cancellationToken)
         {
-            if (request == null) 
-            return null!;
+            if (request == null)
+                return null!;
 
             var key = Encoding.UTF8.GetBytes("v8y/B?E(H+MbQeThWmZq3t6w9z$C&F)J@NcRfUjXn2r5u7x!A%D*G-KaPdSgVkYp");
-            var secretKey =  new SymmetricSecurityKey(key);
+            var secretKey = new SymmetricSecurityKey(key);
             var tokenHandler = new JwtSecurityTokenHandler();
 
             try
@@ -51,7 +51,7 @@ namespace CleanArchitecture.Application.Users.Commands.ValidateToken
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var user = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
-                
+
 
                 return new ValidateVm
                 {
@@ -67,8 +67,8 @@ namespace CleanArchitecture.Application.Users.Commands.ValidateToken
             {
                 return new ValidateVm
                 {
-                    Status = "Ok",
-                    data = null!
+                    Status = "Expired",
+                    data = null,
                 };
             }
         }

@@ -20,7 +20,7 @@ namespace CleanArchitecture.Application.Users.Commands.Login
 {
     public record LoginCommand : IRequest<LoginVm>
     {
-        public string Email { get; init; } = string.Empty; 
+        public string Email { get; init; } = string.Empty;
         public string Password { get; init; } = string.Empty;
     }
 
@@ -43,14 +43,14 @@ namespace CleanArchitecture.Application.Users.Commands.Login
                 .Where(x => x.Email == request.Email)
                 .SingleOrDefaultAsync(cancellationToken);
 
-            if(entity == null)
+            if (entity == null)
             {
                 throw new NotFoundException();
             }
 
             bool isAuth = BCrypt.Net.BCrypt.Verify(request.Password, entity.Password);
 
-            if(isAuth == false)
+            if (isAuth == false)
             {
                 throw new NotFoundException();
             }
@@ -60,16 +60,16 @@ namespace CleanArchitecture.Application.Users.Commands.Login
             var tokenKey = Encoding.UTF8.GetBytes(_jwtSettings.securitykey);
             var tokendesc = new SecurityTokenDescriptor
             {
-               Subject = new ClaimsIdentity(
-                    new Claim[] 
-                    { 
+                Subject = new ClaimsIdentity(
+                    new Claim[]
+                    {
                         new Claim("id", entity.Id.ToString()),
                         new Claim(ClaimTypes.Name, entity.Email),
                         new Claim(ClaimTypes.Role, entity.Role)
                     }
                 ),
-                Expires = DateTime.Now.AddMinutes(30),
-                SigningCredentials = new SigningCredentials( new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)
+                Expires = DateTime.Now.AddMinutes(10),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokendesc);

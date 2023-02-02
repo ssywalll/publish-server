@@ -37,7 +37,7 @@ namespace CleanArchitecture.Application.Carts.Queries.ExportCarts
         public async Task<PaginatedList<CartDto>> Handle(GetCartByToken request, CancellationToken cancellationToken)
         {
             if(request == null)
-                return null;
+                return null!;
 
             var key = Encoding.UTF8.GetBytes("v8y/B?E(H+MbQeThWmZq3t6w9z$C&F)J@NcRfUjXn2r5u7x!A%D*G-KaPdSgVkYp");
             var secretKey =  new SymmetricSecurityKey(key);
@@ -65,7 +65,7 @@ namespace CleanArchitecture.Application.Carts.Queries.ExportCarts
             }
             catch
             {
-                return null;
+                return null!;
             }
         }
     }

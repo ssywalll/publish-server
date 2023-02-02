@@ -16,8 +16,8 @@ namespace CleanArchitecture.Application.Reviews.Commands.CreateReview
         public string Comment { get; set; } = string.Empty;
         public int User_Id { get; set; }
         public int Food_Drink_Id { get; set; }
-    } 
-    
+    }
+
     public class CreateReviewCommandHandler : IRequestHandler<CreateReviewCommand, Review>
     {
         private readonly IApplicationDbContext _context;

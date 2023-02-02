@@ -13,7 +13,7 @@ namespace CleanArchitecture.Application.FoodDrinkOrders.Commands.UpdateFoodDrink
     {
         public int Id { get; init; }
         public int Food_Drink_Id { get; init; }
-        // public int Order_Number{ get; init; }
+        public int Order_Number { get; init; }
     }
 
     public class UpdateFoodDrinkOrderCommandHandler : IRequestHandler<UpdateFoodDrinkOrderCommand>
@@ -30,14 +30,15 @@ namespace CleanArchitecture.Application.FoodDrinkOrders.Commands.UpdateFoodDrink
         public async Task<Unit> Handle(UpdateFoodDrinkOrderCommand request, CancellationToken cancellationToken)
         {
             var entity = await _context.FoodDrinkOrders
-                .FindAsync(new object[] {request.Id}, cancellationToken);
-            
-            if(entity == null)
+                .FindAsync(new object[] { request.Id }, cancellationToken);
+
+            if (entity == null)
             {
                 throw new NotFoundException(nameof(FoodDrinkOrders), request.Id);
             }
 
             entity.Food_Drink_Id = request.Food_Drink_Id;
+            entity.Order_Number = request.Order_Number;
 
             await _context.SaveChangesAsync(cancellationToken);
 

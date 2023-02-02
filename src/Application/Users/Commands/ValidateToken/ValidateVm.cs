@@ -9,6 +9,6 @@ namespace CleanArchitecture.Application.Users.Commands.ValidateToken
     {
         public string Status { get; set; } = string.Empty;
 
-        public ValidateDto data { get; set; } = new ValidateDto();
+        public ValidateDto? data { get; set; } = new ValidateDto();
     }
 }
