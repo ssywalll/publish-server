@@ -39,7 +39,7 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.ExportFoodDrinkMe
                     .Where(x => x.Food_Drink_Id == request.Id)
                     .AsNoTracking()
                     .ProjectTo<ExportFoodDrinkMenuDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken)
+                    .ToListAsync(cancellationToken),
             };
         }
 }

@@ -12,7 +12,7 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.ExportFoodDrinkMe
     {
         public Reaction Reaction { get; set; }
         public string Comment { get; set; } = string.Empty;
-        public int User_Id { get; set; }
+        public string? User_Name { get; set; }
         public int Food_Drink_Id { get; set; }
     }
 }
