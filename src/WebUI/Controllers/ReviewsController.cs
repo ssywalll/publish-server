@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Application.Reviews.Commands.CreateReview;
 using CleanArchitecture.Application.Reviews.Commands.DeleteReview;
 using CleanArchitecture.Application.Reviews.Commands.UpdateReviews;
@@ -25,10 +26,10 @@ namespace WebUI.Controllers
             return await Mediator.Send(new GetReviewsQuery());
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("foodDrinkId")]
+        public async Task<ActionResult<PaginatedList<ReviewDto>>> Get([FromQuery] ExportReviewsQuery command)
         {
-            var vm = await Mediator.Send(new ExportReviewsQuery { Id = id });
+            var vm = await Mediator.Send(command);
             return Ok(vm);
         }
 

@@ -3,13 +3,16 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Application.Common.Mappings;
+using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Application.FoodDrinkMenus.Queries.GetFoodDrinkMenus;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.ExportFoodDrinkMenus;
 
-    public class ExportFoodDrinkMenusQuery : IRequest<ExportFoodDrinkMenusVm>
+
+    public record ExportFoodDrinkMenusQuery : IRequest<ExportFoodDrinkMenusVm>
     {
         public int Id { get; set; }
     }
@@ -27,7 +30,7 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.ExportFoodDrinkMe
 
         public async Task<ExportFoodDrinkMenusVm> Handle(ExportFoodDrinkMenusQuery request, CancellationToken cancellationToken)
         {
-            return new ExportFoodDrinkMenusVm
+           return new ExportFoodDrinkMenusVm
             {
                 Status = "Ok",
                 Data = await _context.FoodDrinkMenus
