@@ -25,11 +25,6 @@ namespace WebUI.Controllers
             return await Mediator.Send(query);
         }
 
-        [HttpGet("name")]
-        public async Task<ActionResult<FoodDrinkMenusVm>> GetFilter([FromQuery] GetFoodDrinkMenuFilter query)
-        {
-            return await Mediator.Send(query);
-        }
 
         [HttpGet("{id}/detail")]
         public async Task<IActionResult> Get(int id)

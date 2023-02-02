@@ -5,15 +5,19 @@ using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Application.Common.Models;
+using CleanArchitecture.Application.Common.Mappings;
 
 namespace CleanArchitecture.Application.Reviews.Queries.ExportReviews;
 
-    public class ExportReviewsQuery : IRequest<ReviewsVm>
+    public record ExportReviewsQuery : IRequest<PaginatedList<ReviewDto>>
     {
-        public int Id { get; set; }
+        public int Id { get; init; }
+        public int PageNumber { get; init; } = 1;
+        public int PageSize { get; init; } = 10;
     }
 
-    public class ExportReviewsQueryHandler : IRequestHandler<ExportReviewsQuery, ReviewsVm>
+    public class ExportReviewsQueryHandler : IRequestHandler<ExportReviewsQuery, PaginatedList<ReviewDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -24,17 +28,13 @@ namespace CleanArchitecture.Application.Reviews.Queries.ExportReviews;
             _mapper = mapper;
         }
 
-        public async Task<ReviewsVm> Handle(ExportReviewsQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedList<ReviewDto>> Handle(ExportReviewsQuery request, CancellationToken cancellationToken)
         {
-             return new ReviewsVm
-            {
-                Data = await _context.Reviews
-                    .Where(x => x.Id == request.Id)
-                    .AsNoTracking()
-                    .ProjectTo<ReviewDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken)
-            };
+            return await _context.Reviews
+                .Where(x => x.Food_Drink_Id == request.Id)
+                .AsNoTracking()
+                .ProjectTo<ReviewDto>(_mapper.ConfigurationProvider)
+                .PaginatedListAsync(request.PageNumber, request.PageSize);
         }
-
     }
 
