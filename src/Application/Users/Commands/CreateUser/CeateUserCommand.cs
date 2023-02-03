@@ -33,29 +33,20 @@ namespace CleanArchitecture.Application.Users.Commands.CreateUser
 
         public async Task<User> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            bool emailValid = EmailValidator.IsValidEmail(request.Email);
-            
-            if(emailValid == true)
+            if (request.IsValidEmail(_context) is false)
+                throw new NotFoundException("Format Email Yang And Masukkan Tidak Valid", HttpStatusCode.BadRequest);
+            var entity = new User
             {
-                var entity = new User
-                {
-                    Name = request.Name,
-                    Email = request.Email,
-                    Password =  BCrypt.Net.BCrypt.HashPassword(request.Password),
-                    Role = request.Role,
-                    Gender = request.Gender,
-                };
+                Name = request.Name,
+                Email = request.Email,
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                Role = request.Role,
+                Gender = request.Gender,
+            };
+            _context.Users.Add(entity);
+            await _context.SaveChangesAsync(cancellationToken);
 
-                _context.Users.Add(entity);
-                await _context.SaveChangesAsync(cancellationToken);
-
-                return entity;
-
-            }
-            else
-            {
-                throw new NotFoundException("Format Email Yang And Masukkan Tidak Valid", HttpStatusCode.BadRequest); 
-            }
-        } 
+            return entity;
+        }
     }
 }

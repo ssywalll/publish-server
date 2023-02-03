@@ -25,13 +25,13 @@ namespace WebUI.Controllers
         [HttpGet]
         public async Task<ActionResult<UsersVm>> Get()
         {
-            return await Mediator.Send( new GetUserQuery());
+            return await Mediator.Send(new GetUserQuery());
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var vm = await Mediator.Send(new ExportUsersQuery {Id = id});
+            var vm = await Mediator.Send(new ExportUsersQuery { Id = id });
 
             return Ok(vm);
         }
@@ -54,14 +54,9 @@ namespace WebUI.Controllers
             return await Mediator.Send(query);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, UpdateUserCommand command)
+        [HttpPut]
+        public async Task<ActionResult> Update(UpdateUserCommand command)
         {
-            if(id != command.Id)
-            {
-                return BadRequest();
-            }
-
             await Mediator.Send(command);
 
             return NoContent();
