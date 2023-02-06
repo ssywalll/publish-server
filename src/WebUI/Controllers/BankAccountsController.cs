@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 using CleanArchitecture.Application.BankAccounts.Queries.ExportBankAccounts;
 using CleanArchitecture.Application.BankAccounts.Commands.DeleteBankAccount;
 using CleanArchitecture.Application.BankAccounts.Commands.UpdateBankAccount;
+using CleanArchitecture.Application.BankAccounts.Queries.ExportBankAccounts.cs;
+using MediatR;
 
 namespace WebUI.Controllers
 {
@@ -36,6 +38,13 @@ namespace WebUI.Controllers
             var vm = await Mediator.Send(new ExportBankAccountsQuery { Id = Id });
             return Ok(vm);
         }
+
+        [HttpGet("Token")]
+        public async Task<ActionResult<BankAccountDto>> GetToken([FromHeader(Name = "Authorization")] GetBankAccountByToken query)
+        {
+            return await Mediator.Send(query);
+        } 
+
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)

@@ -14,7 +14,7 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.ExportFoodDrinkMe
 
     public record ExportFoodDrinkMenusQuery : IRequest<ExportFoodDrinkMenusVm>
     {
-        public int Id { get; set; }
+        public int Id { get; init; }
     }
 
     public class ExportFoodDrinkMenusQueryHandler : IRequestHandler<ExportFoodDrinkMenusQuery, ExportFoodDrinkMenusVm>

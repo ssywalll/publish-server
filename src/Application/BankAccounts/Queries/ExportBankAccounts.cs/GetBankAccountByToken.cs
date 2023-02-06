@@ -2,40 +2,39 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using CleanArchitecture.Application.Carts.Queries.GetCarts;
+using CleanArchitecture.Application.BankAccounts.Queries.GetBankAccounts;
+using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using CleanArchitecture.Application.Common.Models;
-using CleanArchitecture.Application.Common.Mappings;
-using Microsoft.AspNetCore.Mvc;
 
-namespace CleanArchitecture.Application.Carts.Queries.ExportCarts
+namespace CleanArchitecture.Application.BankAccounts.Queries.ExportBankAccounts.cs
 {
-    public record GetCartByToken : IRequest<PaginatedList<CartDto>>
+    public record GetBankAccountByToken : IRequest<BankAccountDto>
     {
-        public string? Token { get; init;}
-        public int PageNumber { get; init; } = 1;
-        public int PageSize { get; init; } = 10;
-    } 
+        [FromHeader]
+        public string? Token { get; init; }
+    }
 
-    public class GetCartByTokenHandler : IRequestHandler<GetCartByToken, PaginatedList<CartDto>>
+    public class GetBankAccountByTokenHandler : IRequestHandler<GetBankAccountByToken, BankAccountDto>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
-        
-        public GetCartByTokenHandler(IApplicationDbContext context, IMapper mapper)
+
+        public GetBankAccountByTokenHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        public async Task<PaginatedList<CartDto>> Handle(GetCartByToken request, CancellationToken cancellationToken)
+        public async Task<BankAccountDto> Handle(GetBankAccountByToken request, CancellationToken cancellationToken)
         {
             if(request == null)
                 return null!;
@@ -57,16 +56,17 @@ namespace CleanArchitecture.Application.Carts.Queries.ExportCarts
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var user = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
-            
-                return await _context.Carts
+                
+              return await _context.BankAccounts
                     .Where(x => x.User_Id == user)
                     .AsNoTracking()
-                    .ProjectTo<CartDto>(_mapper.ConfigurationProvider)
-                    .PaginatedListAsync(request.PageNumber, request.PageSize);
+                    .ProjectTo<BankAccountDto>(_mapper.ConfigurationProvider)
+                    .SingleOrDefaultAsync(cancellationToken);
+
             }
             catch
             {
-                return null!;
+               throw new NotFoundException("Token Tidak Valid", HttpStatusCode.BadRequest);
             }
         }
     }

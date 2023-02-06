@@ -24,8 +24,6 @@ public class ExportBankAccountsQueryHandler : IRequestHandler<ExportBankAccounts
         _mapper = mapper;
     }
 
-    public int Id { get; private set; }
-
     public async Task<BankAccountsVm> Handle(ExportBankAccountsQuery request, CancellationToken cancellationToken)
     {
         return new BankAccountsVm
