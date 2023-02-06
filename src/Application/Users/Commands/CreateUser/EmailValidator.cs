@@ -9,13 +9,26 @@ namespace CleanArchitecture.Application.Users.Commands.CreateUser
 {
     public static class EmailValidator
     {
-        public static bool IsValidEmail(this CreateUserCommand newUser, IApplicationDbContext _context)
+        public static bool IsEmailIsReady(this CreateUserCommand newUser, IApplicationDbContext _context)
         {
             var isExist = _context.Users.FirstOrDefault(
                 user => user.Email == newUser.Email
                 );
             if (isExist is null) return true;
             return false;
+        }
+
+        public static bool IsEmailValid(string email)
+        {
+            try
+            {
+                MailAddress mail = new MailAddress(email);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
