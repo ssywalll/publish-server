@@ -43,7 +43,7 @@ namespace WebUI.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<ActionResult<User>> Create(CreateUserCommand command)
+        public async Task<ActionResult<RegisterVm>> Create(CreateUserCommand command)
         {
             return await Mediator.Send(command);
         }

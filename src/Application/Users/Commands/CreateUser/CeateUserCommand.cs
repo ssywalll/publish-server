@@ -8,13 +8,15 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Application.Users.Queries.GetUsers;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Enums;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.Application.Users.Commands.CreateUser
 {
-    public record CreateUserCommand : IRequest<User>
+    public record CreateUserCommand : IRequest<RegisterVm>
     {
         public string Name { get; init; } = string.Empty;
         public string Email { get; init; } = string.Empty;
@@ -22,7 +24,7 @@ namespace CleanArchitecture.Application.Users.Commands.CreateUser
         public string Role { get; init; } = string.Empty;
         public Gender Gender { get; init; }
     }
-    public class CeateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
+    public class CeateUserCommandHandler : IRequestHandler<CreateUserCommand, RegisterVm>
     {
         private readonly IApplicationDbContext _context;
 
@@ -31,10 +33,14 @@ namespace CleanArchitecture.Application.Users.Commands.CreateUser
             _context = context;
         }
 
-        public async Task<User> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<RegisterVm> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             if (request.IsValidEmail(_context) is false)
-                throw new NotFoundException("Format Email Yang And Masukkan Tidak Valid", HttpStatusCode.BadRequest);
+                return new RegisterVm
+                {
+                    Status = "Email Is Not Valid",
+                    Data = null
+                };
             var entity = new User
             {
                 Name = request.Name,
@@ -46,7 +52,16 @@ namespace CleanArchitecture.Application.Users.Commands.CreateUser
             _context.Users.Add(entity);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return entity;
+            return new RegisterVm
+            {
+                Status = "Ok",
+                Data = new UserDto
+                {
+                    Name = entity.Name,
+                    Email = entity.Email,
+                    Gender = entity.Gender
+                }
+            };
         }
     }
 }
