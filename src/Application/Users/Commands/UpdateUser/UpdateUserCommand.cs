@@ -15,10 +15,8 @@ namespace CleanArchitecture.Application.Users.Commands.UpdateUser
         public int Id { get; init; }
         public string Name { get; init; } = string.Empty;
         public string Email { get; init; } = string.Empty;
-        public string Password { get; init; } = string.Empty;
         public int Phone { get; init; }
-        public Gender Gender { get; init; }
-        public string Picture_Url { get; init ;} = string.Empty;
+        public string Picture_Url { get; init; } = string.Empty;
     }
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand>
     {
@@ -32,18 +30,16 @@ namespace CleanArchitecture.Application.Users.Commands.UpdateUser
         public async Task<Unit> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
             var entity = await _context.Users
-                .FindAsync(new object[] {request.Id}, cancellationToken);
+                .FindAsync(new object[] { request.Id }, cancellationToken);
 
-            if(entity == null)
+            if (entity == null)
             {
                 throw new NotFoundException(nameof(User), request.Id);
             }
 
             entity.Name = request.Name;
             entity.Email = request.Email;
-            entity.Password = request.Password;
             entity.Phone = request.Phone;
-            entity.Gender = request.Gender;
             entity.Picture_Url = request.Picture_Url;
 
             await _context.SaveChangesAsync(cancellationToken);

@@ -33,6 +33,12 @@ namespace WebUI.Controllers
             return Ok(vm);
         }
 
+        [HttpGet("Token")]
+        public async Task<ActionResult<ReviewDto>> GetToken([FromHeader(Name = "Authorization")] GetReviewsByToken query)
+        {
+            return await Mediator.Send(query);
+        } 
+
         [HttpPost]
         public async Task<ActionResult<Review>> Create(CreateReviewCommand command)
         {

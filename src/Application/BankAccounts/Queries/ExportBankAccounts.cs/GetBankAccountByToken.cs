@@ -18,7 +18,7 @@ namespace CleanArchitecture.Application.BankAccounts.Queries.ExportBankAccounts.
 {
     public record GetBankAccountByToken : IRequest<BankAccountDto>
     {
-        [FromHeader]
+        [FromHeader(Name = "Authorization")]
         public string? Token { get; init; }
     }
 
@@ -38,13 +38,19 @@ namespace CleanArchitecture.Application.BankAccounts.Queries.ExportBankAccounts.
             if(request == null)
                 return null!;
 
+            string[] tokenSplit = request.Token!.Split(new char[] {});
+
+            if(tokenSplit == null)
+                throw new NotFoundException("Token Tidak Ada Harap Login Kembali", HttpStatusCode.BadRequest);
+
+
             var key = Encoding.UTF8.GetBytes("v8y/B?E(H+MbQeThWmZq3t6w9z$C&F)J@NcRfUjXn2r5u7x!A%D*G-KaPdSgVkYp");
             var secretKey =  new SymmetricSecurityKey(key);
             var tokenHandler = new JwtSecurityTokenHandler();
 
             try
             {
-                tokenHandler.ValidateToken(request.Token, new TokenValidationParameters
+                tokenHandler.ValidateToken(tokenSplit[1], new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     ValidateIssuer = false,

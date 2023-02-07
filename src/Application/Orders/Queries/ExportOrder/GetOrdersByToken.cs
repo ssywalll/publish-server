@@ -2,45 +2,39 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using CleanArchitecture.Application.Carts.Queries.GetCarts;
+using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Application.Orders.Queries.GetOrders;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using CleanArchitecture.Application.Common.Models;
-using CleanArchitecture.Application.Common.Mappings;
-using Microsoft.AspNetCore.Mvc;
-using CleanArchitecture.Application.Common.Exceptions;
-using System.Net;
 
-namespace CleanArchitecture.Application.Carts.Queries.ExportCarts
+namespace CleanArchitecture.Application.Orders.Queries.ExportOrder
 {
-    public record GetCartByToken : IRequest<PaginatedList<CartDto>>
+    public record GetOrdersByToken : IRequest<OrderDto>
     {
         [FromHeader(Name = "Authorization")]
-        public string? Token { get; init;}
-        [FromQuery]
-        public int PageNumber { get; init; } = 1;
-        [FromQuery]
-        public int PageSize { get; init; } = 10;
+        public string? Token { get; init; }
     } 
 
-    public class GetCartByTokenHandler : IRequestHandler<GetCartByToken, PaginatedList<CartDto>>
+    public class GetOrdersByTokenHandler : IRequestHandler<GetOrdersByToken, OrderDto>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
-        
-        public GetCartByTokenHandler(IApplicationDbContext context, IMapper mapper)
+
+        public GetOrdersByTokenHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        public async Task<PaginatedList<CartDto>> Handle(GetCartByToken request, CancellationToken cancellationToken)
+        public async Task<OrderDto> Handle(GetOrdersByToken request, CancellationToken cancellationToken)
         {
             if(request == null)
                 return null!;
@@ -49,6 +43,7 @@ namespace CleanArchitecture.Application.Carts.Queries.ExportCarts
 
             if(tokenSplit == null)
                 throw new NotFoundException("Token Tidak Ada Harap Login Kembali", HttpStatusCode.BadRequest);
+
 
             var key = Encoding.UTF8.GetBytes("v8y/B?E(H+MbQeThWmZq3t6w9z$C&F)J@NcRfUjXn2r5u7x!A%D*G-KaPdSgVkYp");
             var secretKey =  new SymmetricSecurityKey(key);
@@ -67,16 +62,17 @@ namespace CleanArchitecture.Application.Carts.Queries.ExportCarts
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var user = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
-            
-                return await _context.Carts
+                
+              return await _context.Orders
                     .Where(x => x.User_Id == user)
                     .AsNoTracking()
-                    .ProjectTo<CartDto>(_mapper.ConfigurationProvider)
-                    .PaginatedListAsync(request.PageNumber, request.PageSize);
+                    .ProjectTo<OrderDto>(_mapper.ConfigurationProvider)
+                    .SingleOrDefaultAsync(cancellationToken);
+
             }
             catch
             {
-                throw new NotFoundException("Token Tidak Valid", HttpStatusCode.BadRequest);
+               throw new NotFoundException("Token Tidak Valid", HttpStatusCode.BadRequest);
             }
         }
     }

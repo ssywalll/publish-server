@@ -1,6 +1,7 @@
 using CleanArchitecture.Application.CreateOrders.Commands.CreateOrder;
 using CleanArchitecture.Application.Orders.Commands.DeleteOrder;
 using CleanArchitecture.Application.Orders.Commands.UpdateOrder;
+using CleanArchitecture.Application.Orders.Queries.ExportOrder;
 using CleanArchitecture.Application.Orders.Queries.ExportOrders;
 using CleanArchitecture.Application.Orders.Queries.GetOrders;
 using CleanArchitecture.Domain.Entities;
@@ -27,6 +28,12 @@ namespace WebUI.Controllers
             var vm = await Mediator.Send(new ExportOrdersQuery { Id = id });
             return Ok(vm);
         }
+
+        [HttpGet("Token")]
+        public async Task<ActionResult<OrderDto>> GetToken([FromHeader(Name = "Authorization")] GetOrdersByToken query)
+        {
+            return await Mediator.Send(query);
+        } 
 
         [HttpPost]
         public async Task<ActionResult<Order>> Create(CreateOrderCommand command)
