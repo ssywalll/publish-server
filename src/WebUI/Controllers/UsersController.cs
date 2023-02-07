@@ -15,6 +15,7 @@ using CleanArchitecture.Application.Users.Queries.ExportUsers;
 using CleanArchitecture.Application.Users.Queries.GetUsers;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.WebUI.Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebUI.Controllers
@@ -48,8 +49,9 @@ namespace WebUI.Controllers
             return await Mediator.Send(command);
         }
 
-        [HttpPost("ValidateToken")]
-        public async Task<ActionResult<ValidateVm>> Validate(ValidateToken query)
+        // [Authorize]
+        [HttpGet("ValidateToken")]
+        public async Task<ActionResult<ValidateVm>> Validate([FromHeader(Name = "Authorization")]ValidateToken query)
         {
             return await Mediator.Send(query);
         }
