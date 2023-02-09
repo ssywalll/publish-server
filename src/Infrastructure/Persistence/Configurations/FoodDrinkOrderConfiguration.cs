@@ -19,7 +19,7 @@ public class FoodDrinkOrderConfiguration : IEntityTypeConfiguration<FoodDrinkOrd
         builder
         .HasOne(t => t.Orders)
         .WithMany(c => c.FoodDrinkOrders)
-        .HasForeignKey(t => t.Order_Number)
+        .HasForeignKey(t => t.Order_Id)
         .HasConstraintName("Fk_FoodDrinkOrder_Order")
         .OnDelete(DeleteBehavior.Cascade)
         .IsRequired();

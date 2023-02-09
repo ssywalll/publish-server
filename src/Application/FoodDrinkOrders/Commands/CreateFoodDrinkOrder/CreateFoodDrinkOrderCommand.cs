@@ -11,7 +11,8 @@ namespace CleanArchitecture.Application.FoodDrinkOrders.Commands.CreateFoodDrink
     public record CreateFoodDrinkOrderCommand : IRequest<FoodDrinkOrder>
     {
         public int Food_Drink_Id { get; init; }
-        public int Order_Number { get; init; }
+        public int Order_Id { get; init; }
+        public int Quantity { get; init; }
     } 
 
     public class CreateFoodDrinkOrderCommandHandler : IRequestHandler<CreateFoodDrinkOrderCommand, FoodDrinkOrder>
@@ -28,7 +29,8 @@ namespace CleanArchitecture.Application.FoodDrinkOrders.Commands.CreateFoodDrink
             var entity = new FoodDrinkOrder
             {
                 Food_Drink_Id = request.Food_Drink_Id,
-                Order_Number = request.Order_Number 
+                Order_Id = request.Order_Id,
+                Quantity = request.Quantity
             };
 
             _context.FoodDrinkOrders.Add(entity);

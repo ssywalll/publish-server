@@ -59,14 +59,16 @@ namespace CleanArchitecture.Application.Users.Commands.ValidateToken
                 }, out SecurityToken validatedToken);
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
-                var user = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
+                var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
+                var userEmail = jwtToken.Claims.First(x => x.Type == "unique_name").Value;
+                var userRole = jwtToken.Claims.First(x => x.Type == "role").Value;
 
 
                 return new ValidateVm
                 {
                     Status = "Ok",
                     data = await _context.Users
-                        .Where(x => x.Id == user)
+                        .Where(x => x.Id == userId)
                         .AsNoTracking()
                         .ProjectTo<ValidateDto>(_mapper.ConfigurationProvider)
                         .SingleOrDefaultAsync(cancellationToken)

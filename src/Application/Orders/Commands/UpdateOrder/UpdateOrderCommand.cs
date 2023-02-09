@@ -10,7 +10,7 @@ namespace CleanArchitecture.Application.Orders.Commands.UpdateOrder
     {
         public int Id { get; set; }
         public int User_Id { get; set; }
-        public string Meal_Date { get; set; } = string.Empty;
+        public DateTime Meal_Date { get; set; }
         public string Address { get; set; } = string.Empty;
         public int BankAccount_Id { get; set; }
     }

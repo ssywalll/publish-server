@@ -1,4 +1,5 @@
 using CleanArchitecture.Application.CreateOrders.Commands.CreateOrder;
+using CleanArchitecture.Application.Orders.Commands.CreateOrder;
 using CleanArchitecture.Application.Orders.Commands.DeleteOrder;
 using CleanArchitecture.Application.Orders.Commands.UpdateOrder;
 using CleanArchitecture.Application.Orders.Queries.ExportOrder;
@@ -6,7 +7,6 @@ using CleanArchitecture.Application.Orders.Queries.ExportOrders;
 using CleanArchitecture.Application.Orders.Queries.GetOrders;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.WebUI.Controllers;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -36,7 +36,7 @@ namespace WebUI.Controllers
         } 
 
         [HttpPost]
-        public async Task<ActionResult<Order>> Create(CreateOrderCommand command)
+        public async Task<ActionResult<PostOrderVm>> Create(CreateOrderCommand command)
         {
             return await Mediator.Send(command);
         }

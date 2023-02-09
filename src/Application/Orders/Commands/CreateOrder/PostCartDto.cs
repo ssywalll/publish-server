@@ -5,13 +5,11 @@ using System.Threading.Tasks;
 using CleanArchitecture.Application.Common.Mappings;
 using CleanArchitecture.Domain.Entities;
 
-namespace CleanArchitecture.Application.FoodDrinkOrders.Queries.GetFoodDrinkOrders
+namespace CleanArchitecture.Application.Orders.Commands.CreateOrder
 {
-    public class FoodDrinkOrderDto : IMapFrom<FoodDrinkOrder>
+    public class PostCartDto : IMapFrom<Cart>
     {
-        public int Id { get; set; }
         public int Food_Drink_Id { get; set; }
-        public int Order_Id { get; set; }
         public int Quantity { get; set; }
     }
 }
