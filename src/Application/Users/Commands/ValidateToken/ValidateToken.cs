@@ -13,13 +13,12 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using CleanArchitecture.Application.Common.Context;
 
 namespace CleanArchitecture.Application.Users.Commands.ValidateToken
 {
-    public record ValidateToken : IRequest<ValidateVm>
+    public record ValidateToken : UseAprizax, IRequest<ValidateVm>
     {
-        [FromHeader(Name = "Authorization")]
-        public string? Token { get; init; } 
     }
 
     public class ValidateTokenHandler : IRequestHandler<ValidateToken, ValidateVm>
@@ -38,48 +37,23 @@ namespace CleanArchitecture.Application.Users.Commands.ValidateToken
             if (request == null)
                 return null!;
 
-            string[] tokenSplit = request.Token!.Split(new char[] {});
-
-            if(tokenSplit == null)
-                throw new NotFoundException("Token Tidak Ada Harap Login Kembali", HttpStatusCode.BadRequest);
-
-            var key = Encoding.UTF8.GetBytes("v8y/B?E(H+MbQeThWmZq3t6w9z$C&F)J@NcRfUjXn2r5u7x!A%D*G-KaPdSgVkYp");
-            var secretKey = new SymmetricSecurityKey(key);
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            try
-            {
-                tokenHandler.ValidateToken(tokenSplit[1], new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    IssuerSigningKey = secretKey,
-                    ClockSkew = TimeSpan.Zero
-                }, out SecurityToken validatedToken);
-
-                var jwtToken = (JwtSecurityToken)validatedToken;
-                var user = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
-
-
-                return new ValidateVm
-                {
-                    Status = "Ok",
-                    data = await _context.Users
-                        .Where(x => x.Id == user)
-                        .AsNoTracking()
-                        .ProjectTo<ValidateDto>(_mapper.ConfigurationProvider)
-                        .SingleOrDefaultAsync(cancellationToken)
-                };
-            }
-            catch
-            {
+            var tokenInfo = request.GetTokenInfo();
+            if (tokenInfo.Is_Valid is false)
                 return new ValidateVm
                 {
                     Status = "Expired",
                     data = null,
                 };
-            }
+            var userData = await _context.Users
+                    .Where(x => x.Id == tokenInfo.Owner_Id)
+                    .AsNoTracking()
+                    .ProjectTo<ValidateDto>(_mapper.ConfigurationProvider)
+                    .SingleOrDefaultAsync(cancellationToken);
+            return new ValidateVm
+            {
+                Status = "Ok",
+                data = userData
+            };
         }
     }
 }
