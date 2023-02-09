@@ -35,7 +35,7 @@ namespace CleanArchitecture.Application.Users.Commands.ValidateToken
         public async Task<ValidateVm> Handle(ValidateToken request, CancellationToken cancellationToken)
         {
             if (request == null)
-                return null!;
+                return null;
 
             var tokenInfo = request.GetTokenInfo();
             if (tokenInfo.Is_Valid is false)

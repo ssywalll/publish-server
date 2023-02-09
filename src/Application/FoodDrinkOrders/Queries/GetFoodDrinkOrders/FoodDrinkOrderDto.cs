@@ -11,6 +11,7 @@ namespace CleanArchitecture.Application.FoodDrinkOrders.Queries.GetFoodDrinkOrde
     {
         public int Id { get; set; }
         public int Food_Drink_Id { get; set; }
-        public int Order_Number { get; set; }
+        public int Order_Id { get; set; }
+        public int Quantity { get; set; }
     }
 }

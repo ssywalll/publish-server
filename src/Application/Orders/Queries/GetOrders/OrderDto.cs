@@ -9,11 +9,12 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
     {
         public int Id { get; set; }
         public DateTime Order_Time { get; set; }
-        public string Meal_Date { get; set; } = string.Empty;
+        public DateTime Meal_Date { get; set; }
         public Status Status { get; set; }
-        public int Bank_Number { get; set; }
+        public string? Bank_Number { get; set; }
         public string Payment_Url { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public int User_Id { get; set; }
+        public int BankAccount_Id { get; set; }
     }
 }

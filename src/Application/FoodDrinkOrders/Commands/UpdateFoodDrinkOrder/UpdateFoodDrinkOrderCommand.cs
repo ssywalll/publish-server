@@ -13,7 +13,7 @@ namespace CleanArchitecture.Application.FoodDrinkOrders.Commands.UpdateFoodDrink
     {
         public int Id { get; init; }
         public int Food_Drink_Id { get; init; }
-        public int Order_Number { get; init; }
+        public int Order_Id { get; init; }
     }
 
     public class UpdateFoodDrinkOrderCommandHandler : IRequestHandler<UpdateFoodDrinkOrderCommand>
@@ -38,7 +38,7 @@ namespace CleanArchitecture.Application.FoodDrinkOrders.Commands.UpdateFoodDrink
             }
 
             entity.Food_Drink_Id = request.Food_Drink_Id;
-            entity.Order_Number = request.Order_Number;
+            entity.Order_Id = request.Order_Id;
 
             await _context.SaveChangesAsync(cancellationToken);
 
