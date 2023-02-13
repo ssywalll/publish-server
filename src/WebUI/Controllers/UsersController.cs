@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CleanArchitecture.Application.Common.Mappings;
+using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Application.Users.Commands.CreateUser;
 using CleanArchitecture.Application.Users.Commands.DeleteUser;
 using CleanArchitecture.Application.Users.Commands.Login;
@@ -24,9 +25,9 @@ namespace WebUI.Controllers
     public class UsersController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<UsersVm>> Get()
+        public async Task<ActionResult<PaginatedList<UserDto>>> Get([FromQuery] GetUserQuery query)
         {
-            return await Mediator.Send(new GetUserQuery());
+            return await Mediator.Send(query);
         }
 
         [HttpGet("{id}")]
@@ -49,7 +50,6 @@ namespace WebUI.Controllers
             return await Mediator.Send(command);
         }
 
-        // [Authorize]
         [HttpGet("ValidateToken")]
         public async Task<ActionResult<ValidateVm>> Validate([FromHeader(Name = "Authorization")]ValidateToken query)
         {

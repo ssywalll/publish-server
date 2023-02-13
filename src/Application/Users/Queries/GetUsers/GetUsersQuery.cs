@@ -6,14 +6,19 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Application.Common.Mappings;
+using CleanArchitecture.Application.Common.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.Users.Queries.GetUsers
 {
-    public record GetUserQuery : IRequest<UsersVm>;
+    public record GetUserQuery : IRequest<PaginatedList<UserDto>>
+    {
+         public int PageNumber { get; init; } = 1;
+        public int PageSize { get; init; } = 10;
+    }
 
-    public class GetUsersQueryHandler : IRequestHandler<GetUserQuery, UsersVm>
+    public class GetUsersQueryHandler : IRequestHandler<GetUserQuery, PaginatedList<UserDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -24,16 +29,19 @@ namespace CleanArchitecture.Application.Users.Queries.GetUsers
             _mapper = mapper;
         }
 
-        public async Task<UsersVm> Handle(GetUserQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedList<UserDto>> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
-            return new UsersVm
-            {
-                Status = "Ok",
-                Data = await _context.Users
-                    .AsNoTracking()
+            // return new UsersVm
+            // {
+            //     Status = "Ok",
+            //     Data = await _context.Users
+            //         .AsNoTracking()
+            //         .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
+            //         .ToListAsync(cancellationToken)
+            // };
+            return await _context.Users
                     .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken)
-            };
+                    .PaginatedListAsync(request.PageNumber, request.PageSize);
         }
     }
 }
