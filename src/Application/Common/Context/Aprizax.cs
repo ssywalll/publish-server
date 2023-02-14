@@ -100,5 +100,17 @@ namespace CleanArchitecture.Application.Common.Context
             return isAsc ?
             source.OrderBy(keySelector) : source.OrderByDescending(keySelector);
         }
+
+        public static string GetLatestQuantity(this DbSet<Cart> carts, int? user_Id)
+        {
+            if (user_Id is null)
+                throw new NullReferenceException("Pastikan User Id telah terisi");
+            var user_Carts = carts
+                .Where(x => (x.User_Id == user_Id) && (x.IsChecked == true))
+                .ToList();
+            var quantityCount = 0;
+            user_Carts.ForEach(x => quantityCount += x.Quantity);
+            return quantityCount.ToString();
+        }
     }
 }

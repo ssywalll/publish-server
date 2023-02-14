@@ -15,6 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using CleanArchitecture.Application.Users.Queries.GetUsers;
+using CleanArchitecture.Application.Common.Context;
 
 namespace CleanArchitecture.Application.Users.Commands.Login
 {
@@ -75,15 +77,20 @@ namespace CleanArchitecture.Application.Users.Commands.Login
             var token = tokenHandler.CreateToken(tokendesc);
             string finalToken = tokenHandler.WriteToken(token);
 
+            var userData = await _context.Users
+                    .Where(x => x.Email == entity.Email)
+                    .AsNoTracking()
+                    .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
+                    .SingleOrDefaultAsync(cancellationToken);
+
+            if ((userData != null) && (userData.Role == "user"))
+                userData.CartLatestQuantity = _context.Carts.GetLatestQuantity(userData.Id);
+
             return new LoginVm
             {
                 Status = "Ok",
                 Token = finalToken,
-                data = await _context.Users
-                    .Where(x => x.Email == entity.Email)
-                    .AsNoTracking()
-                    .ProjectTo<LoginDto>(_mapper.ConfigurationProvider)
-                    .SingleOrDefaultAsync(cancellationToken)
+                data = userData
             };
         }
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CleanArchitecture.Application.Users.Queries.GetUsers;
 
 namespace CleanArchitecture.Application.Users.Commands.ValidateToken
 {
@@ -9,6 +10,6 @@ namespace CleanArchitecture.Application.Users.Commands.ValidateToken
     {
         public string Status { get; set; } = string.Empty;
 
-        public ValidateDto? data { get; set; } = new ValidateDto();
+        public UserDto? data { get; set; } = new UserDto();
     }
 }

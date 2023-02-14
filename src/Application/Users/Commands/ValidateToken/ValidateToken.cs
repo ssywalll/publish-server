@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using CleanArchitecture.Application.Common.Context;
+using CleanArchitecture.Application.Users.Queries.GetUsers;
 
 namespace CleanArchitecture.Application.Users.Commands.ValidateToken
 {
@@ -35,7 +36,7 @@ namespace CleanArchitecture.Application.Users.Commands.ValidateToken
         public async Task<ValidateVm> Handle(ValidateToken request, CancellationToken cancellationToken)
         {
             if (request == null)
-                return null;
+                return null!;
 
             var tokenInfo = request.GetTokenInfo();
             if (tokenInfo.Is_Valid is false)
@@ -47,8 +48,10 @@ namespace CleanArchitecture.Application.Users.Commands.ValidateToken
             var userData = await _context.Users
                     .Where(x => x.Id == tokenInfo.Owner_Id)
                     .AsNoTracking()
-                    .ProjectTo<ValidateDto>(_mapper.ConfigurationProvider)
+                    .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
                     .SingleOrDefaultAsync(cancellationToken);
+            if ((userData != null) && (userData.Role == "user"))
+                userData.CartLatestQuantity = _context.Carts.GetLatestQuantity(userData.Id);
             return new ValidateVm
             {
                 Status = "Ok",

@@ -4,21 +4,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Domain.Entities;
 using MediatR;
+using CleanArchitecture.Application.Common.Context;
 using CleanArchitecture.Application.Common.Interfaces;
 using AutoMapper;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace CleanArchitecture.Application.Carts.Commands.CreateCart
 {
-    public record CreateCartCommand : IRequest<Cart>
+    public record CreateCartCommand : UseAprizax, IRequest<CreateCartVm>
     {
-        public string Token { get; init; } = string.Empty;
         public int Food_Drink_Id { get; init; }
-        public int Quantity { get; init; }
     }
-    public class CreateCartCommandHandler : IRequestHandler<CreateCartCommand ,Cart>
+    public class CreateCartCommandHandler : IRequestHandler<CreateCartCommand, CreateCartVm>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -29,50 +29,44 @@ namespace CleanArchitecture.Application.Carts.Commands.CreateCart
             _mapper = mapper;
         }
 
-        public async Task<Cart> Handle(CreateCartCommand request, CancellationToken cancellationToken)
+        public async Task<CreateCartVm> Handle(CreateCartCommand request, CancellationToken cancellationToken)
         {
-            if(request == null)
+            if (request is null)
                 return null!;
 
+            var tokenInfo = request.GetTokenInfo();
 
-            var key = Encoding.UTF8.GetBytes("v8y/B?E(H+MbQeThWmZq3t6w9z$C&F)J@NcRfUjXn2r5u7x!A%D*G-KaPdSgVkYp");
-            var secretKey =  new SymmetricSecurityKey(key);
-            var tokenHandler = new JwtSecurityTokenHandler();
+            if (tokenInfo.Is_Valid is false) return null!;
 
-            try
+            var cartTarget = await _context.Carts.FirstOrDefaultAsync(
+                x => (x.User_Id == tokenInfo.Owner_Id) && (x.Food_Drink_Id == request.Food_Drink_Id)
+            );
+
+            var foodDrinkTarget = await _context.FoodDrinkMenus
+               .FirstAsync(x => x.Id.Equals(request.Food_Drink_Id));
+
+            if (cartTarget is null)
             {
-                tokenHandler.ValidateToken(request.Token, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    IssuerSigningKey = secretKey,
-                    ClockSkew = TimeSpan.Zero
-                }, out SecurityToken validatedToken);
-
-                var jwtToken = (JwtSecurityToken)validatedToken;
-                var user = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
-
-
                 var entity = new Cart
                 {
-                        User_Id = user,
-                        Food_Drink_Id = request.Food_Drink_Id,
-                        Quantity = request.Quantity
+                    User_Id = tokenInfo.Owner_Id ?? 0,
+                    Food_Drink_Id = request.Food_Drink_Id,
+                    Quantity = foodDrinkTarget.Min_Order
                 };
-
-
                 _context.Carts.Add(entity);
-
-                await _context.SaveChangesAsync(cancellationToken);
-
-                return entity;
             }
-            
-            catch
+            else
             {
-                return null!;
+                cartTarget.Quantity++;
             }
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return new CreateCartVm
+            {
+                Status = "Ok",
+                LatestQuantity = _context.Carts.GetLatestQuantity(tokenInfo.Owner_Id)
+            };
         }
     }
 }
