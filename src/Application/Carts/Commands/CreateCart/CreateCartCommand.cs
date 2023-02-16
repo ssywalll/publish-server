@@ -1,16 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CleanArchitecture.Domain.Entities;
 using MediatR;
 using CleanArchitecture.Application.Common.Context;
 using CleanArchitecture.Application.Common.Interfaces;
 using AutoMapper;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace CleanArchitecture.Application.Carts.Commands.CreateCart
 {
@@ -65,7 +58,7 @@ namespace CleanArchitecture.Application.Carts.Commands.CreateCart
             return new CreateCartVm
             {
                 Status = "Ok",
-                LatestQuantity = _context.Carts.GetLatestQuantity(tokenInfo.Owner_Id)
+                CurrentQuantity = _context.Carts.GetCurrentQuantity(tokenInfo.Owner_Id)
             };
         }
     }

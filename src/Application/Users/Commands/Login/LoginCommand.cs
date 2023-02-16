@@ -83,9 +83,6 @@ namespace CleanArchitecture.Application.Users.Commands.Login
                     .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
                     .SingleOrDefaultAsync(cancellationToken);
 
-            if ((userData != null) && (userData.Role == "user"))
-                userData.CartLatestQuantity = _context.Carts.GetLatestQuantity(userData.Id);
-
             return new LoginVm
             {
                 Status = "Ok",

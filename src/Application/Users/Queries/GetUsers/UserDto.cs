@@ -18,6 +18,5 @@ namespace CleanArchitecture.Application.Users.Queries.GetUsers
         public int Phone { get; set; }
         public Gender Gender { get; set; }
         public string Picture_Url { get; set; } = string.Empty;
-        public string? CartLatestQuantity { get; set; }
     }
 }

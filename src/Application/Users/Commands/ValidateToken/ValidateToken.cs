@@ -50,8 +50,6 @@ namespace CleanArchitecture.Application.Users.Commands.ValidateToken
                     .AsNoTracking()
                     .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
                     .SingleOrDefaultAsync(cancellationToken);
-            if ((userData != null) && (userData.Role == "user"))
-                userData.CartLatestQuantity = _context.Carts.GetLatestQuantity(userData.Id);
             return new ValidateVm
             {
                 Status = "Ok",

@@ -22,18 +22,18 @@ namespace CleanArchitecture.Application.Carts.Queries.ExportCarts
     public record GetCartByToken : IRequest<PaginatedList<CartDto>>
     {
         [FromHeader(Name = "Authorization")]
-        public string? Token { get; init;}
+        public string? Token { get; init; }
         [FromQuery]
         public int PageNumber { get; init; } = 1;
         [FromQuery]
         public int PageSize { get; init; } = 10;
-    } 
+    }
 
     public class GetCartByTokenHandler : IRequestHandler<GetCartByToken, PaginatedList<CartDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
-        
+
         public GetCartByTokenHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
@@ -42,16 +42,16 @@ namespace CleanArchitecture.Application.Carts.Queries.ExportCarts
 
         public async Task<PaginatedList<CartDto>> Handle(GetCartByToken request, CancellationToken cancellationToken)
         {
-            if(request == null)
+            if (request == null)
                 return null!;
 
-            string[] tokenSplit = request.Token!.Split(new char[] {});
+            string[] tokenSplit = request.Token!.Split(new char[] { });
 
-            if(tokenSplit == null)
+            if (tokenSplit == null)
                 throw new NotFoundException("Token Tidak Ada Harap Login Kembali", HttpStatusCode.BadRequest);
 
             var key = Encoding.UTF8.GetBytes("v8y/B?E(H+MbQeThWmZq3t6w9z$C&F)J@NcRfUjXn2r5u7x!A%D*G-KaPdSgVkYp");
-            var secretKey =  new SymmetricSecurityKey(key);
+            var secretKey = new SymmetricSecurityKey(key);
             var tokenHandler = new JwtSecurityTokenHandler();
 
             try
@@ -67,7 +67,7 @@ namespace CleanArchitecture.Application.Carts.Queries.ExportCarts
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var user = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
-            
+
                 return await _context.Carts
                     .Where(x => x.User_Id == user)
                     .AsNoTracking()

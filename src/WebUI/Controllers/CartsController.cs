@@ -39,20 +39,33 @@ namespace WebUI.Controllers
         public async Task<ActionResult<PaginatedList<CartDto>>> GetToken([FromQuery] GetCartByToken query)
         {
             return await Mediator.Send(query);
-        } 
+        }
+
+        [HttpGet("CurrentQuantity")]
+        public async Task<ActionResult<CurrentQuantityCartVm>> Get([FromQuery] CurrentQuantityCart query)
+        {
+            return await Mediator.Send(query);
+        }
 
         [HttpPost]
-        public async Task<ActionResult<Cart>> Create(CreateCartCommand command)
+        public async Task<ActionResult<CreateCartVm>> Create(CreateCartCommand command)
         {
             return await Mediator.Send(command);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        [HttpDelete("Remove/Single")]
+        public async Task<ActionResult> RemoveSingle(RemoveCartSingle command)
         {
-            await Mediator.Send(new DeleteCartCommand(id));
+            await Mediator.Send(command);
 
-            return NoContent();
+            return Ok();
+        }
+        [HttpDelete("Remove/Multiple")]
+        public async Task<ActionResult> RemoveMultiple(RemoveCartMultiple command)
+        {
+            await Mediator.Send(command);
+
+            return Ok();
         }
 
         [HttpPut("{id}")]
@@ -62,6 +75,25 @@ namespace WebUI.Controllers
             {
                 return BadRequest();
             }
+            await Mediator.Send(command);
+            return Ok();
+        }
+
+        [HttpPut("CheckboxTrigger")]
+        public async Task<ActionResult> CheckboxTrigger(CheckboxTriggerCart command)
+        {
+            await Mediator.Send(command);
+            return Ok();
+        }
+        [HttpPut("CheckboxTrigger/All")]
+        public async Task<ActionResult> CheckboxTriggerAll(CheckboxAllCart command)
+        {
+            await Mediator.Send(command);
+            return Ok();
+        }
+        [HttpPut("OneQuantity")]
+        public async Task<ActionResult> OneQuantity(OneQuantityCartDto command)
+        {
             await Mediator.Send(command);
             return Ok();
         }
