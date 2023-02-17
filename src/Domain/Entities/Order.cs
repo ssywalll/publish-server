@@ -13,5 +13,6 @@ namespace CleanArchitecture.Domain.Entities
         public User? users { get; set; }
         public BankAccount? BankAccounts { get; set; }
         public List<FoodDrinkOrder>? FoodDrinkOrders { get; set; }
+        public List<FoodDrinkMenu>? FoodDrinkMenus { get; set; }
     }
 }
