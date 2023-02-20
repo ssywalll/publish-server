@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using CleanArchitecture.Application.Common.Mappings;
 using CleanArchitecture.Domain.Entities;
 
@@ -16,12 +17,12 @@ namespace CleanArchitecture.Application.Carts.Queries.GetCarts
         public string? Food_Drink_Menu_Name { get; set; }
         public float? Food_Drink_Menu_Price { get; set; }
         public int? Food_Drink_Menu_Min_Order { get; set; }
-        public FoodDrinkMenu? FoodDrinkMenu { get; set; }
-        public CartDto()
+        public void Mapping(Profile profile)
         {
-            Food_Drink_Menu_Name = FoodDrinkMenu?.Name;
-            Food_Drink_Menu_Price = FoodDrinkMenu?.Price;
-            Food_Drink_Menu_Min_Order = FoodDrinkMenu?.Min_Order;
+            profile.CreateMap<Cart, CartDto>()
+                .ForMember(d => d.Food_Drink_Menu_Name, opt => opt.MapFrom(s => s.FoodDrinkMenu!.Name))
+                .ForMember(d => d.Food_Drink_Menu_Price, opt => opt.MapFrom(s => s.FoodDrinkMenu!.Price))
+                .ForMember(d => d.Food_Drink_Menu_Min_Order, opt => opt.MapFrom(s => s.FoodDrinkMenu!.Min_Order));
         }
     }
 }
