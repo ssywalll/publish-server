@@ -51,11 +51,16 @@ namespace WebUI.Controllers
         }
 
         [HttpGet("ValidateToken")]
-        public async Task<ActionResult<ValidateVm>> Validate([FromHeader(Name = "Authorization")]ValidateToken query)
+        public async Task<ActionResult<ValidateVm>> Validate([FromHeader(Name = "Authorization")] ValidateToken query)
         {
             return await Mediator.Send(query);
         }
 
+        [HttpPut("ChangePassword")]
+        public async Task<ActionResult<NewPasswordVm>> ChangePassword([FromQuery] NewPasswordCommand command)
+        {
+            return await Mediator.Send(command);
+        }
         [HttpPut]
         public async Task<ActionResult> Update(UpdateUserCommand command)
         {
