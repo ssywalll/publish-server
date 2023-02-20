@@ -13,6 +13,7 @@ namespace CleanArchitecture.Application.FoodDrinkOrders.Commands.CreateFoodDrink
         public int Food_Drink_Id { get; init; }
         public int Order_Id { get; init; }
         public int Quantity { get; init; }
+        public float Price { get; init; }
     } 
 
     public class CreateFoodDrinkOrderCommandHandler : IRequestHandler<CreateFoodDrinkOrderCommand, FoodDrinkOrder>
@@ -30,7 +31,8 @@ namespace CleanArchitecture.Application.FoodDrinkOrders.Commands.CreateFoodDrink
             {
                 Food_Drink_Id = request.Food_Drink_Id,
                 Order_Id = request.Order_Id,
-                Quantity = request.Quantity
+                Quantity = request.Quantity,
+                Price = request.Price
             };
 
             _context.FoodDrinkOrders.Add(entity);

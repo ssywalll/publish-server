@@ -13,5 +13,6 @@ namespace CleanArchitecture.Application.FoodDrinkOrders.Queries.GetFoodDrinkOrde
         public int Food_Drink_Id { get; set; }
         public int Order_Id { get; set; }
         public int Quantity { get; set; }
+        public float Price { get; set; }
     }
 }

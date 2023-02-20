@@ -1,3 +1,4 @@
+using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Application.CreateOrders.Commands.CreateOrder;
 using CleanArchitecture.Application.Orders.Commands.CreateOrder;
 using CleanArchitecture.Application.Orders.Commands.DeleteOrder;
@@ -20,6 +21,30 @@ namespace WebUI.Controllers
         public async Task<ActionResult<OrdersVm>> Handle()
         {
             return await Mediator.Send(new GetOrdersQuery());
+        }
+
+        [HttpGet("Waiting")]
+        public async Task<ActionResult<PaginatedList<OrderWaitingDto>>> GetWaiting([FromQuery] GetOrderStatusWaiting query)
+        {
+            return await Mediator.Send(query);
+        }
+
+        [HttpGet("OnProcces")]
+        public async Task<ActionResult<PaginatedList<OrderWaitingDto>>> GetOnProcces([FromQuery] GetOrderOnProcces query)
+        {
+            return await Mediator.Send(query);
+        }
+
+        [HttpGet("OnDelivery")]
+        public async Task<ActionResult<PaginatedList<OrderWaitingDto>>> GetOnDelivery([FromQuery] GetOrderOnDelivery query)
+        {
+            return await Mediator.Send(query);
+        }
+
+        [HttpGet("Successful")]
+        public async Task<ActionResult<PaginatedList<OrderWaitingDto>>> GetSuccessful([FromQuery] GetOrderSuccessful query)
+        {
+            return await Mediator.Send(query);
         }
 
         [HttpGet("{id}")]

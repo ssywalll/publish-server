@@ -14,7 +14,7 @@ namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
 {
     public record CreateOrderCommand : IRequest<PostOrderVm>
     {
-        public string? Token { get; init;}
+        public string? Token { get; init; }
         public PostOrderDto? OrderData { get; init; }
     }
 
@@ -53,14 +53,14 @@ namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
                 var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
                 var entity = new Order
-                    {
-                        Meal_Date = request.OrderData!.Meal_Date,
-                        Address = request.OrderData!.Address,
-                        User_Id = userId,
-                        BankAccount_Id = request.OrderData!.BankAccount_Id
-                    };
+                {
+                    Meal_Date = request.OrderData!.Meal_Date,
+                    Address = request.OrderData!.Address,
+                    User_Id = userId,
+                    BankAccount_Id = request.OrderData!.BankAccount_Id
+                };
 
-                if(entity != null)
+                if (entity != null)
                 {
                     _context.Orders.Add(entity);
                     await _context.SaveChangesAsync(cancellationToken);
@@ -69,19 +69,19 @@ namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
                 var userData = await _context.Users
                     .Where(x => x.Id == entity!.User_Id)
                     .SingleOrDefaultAsync(cancellationToken);
-             
+
                 var cartsData = await _context.Carts
                     .Where(x => x.User_Id == userData!.Id)
                     .Where(y => y.IsChecked == true)
                     .ToListAsync(cancellationToken);
 
-                foreach(var item in cartsData)
+                foreach (var item in cartsData)
                 {
                     var orderData = new FoodDrinkOrder
                     {
                         Food_Drink_Id = item.Food_Drink_Id,
                         Order_Id = entity!.Id,
-                        Quantity = item.Quantity
+                        Quantity = item.Quantity,
                     };
 
                     _context.FoodDrinkOrders.Add(orderData);
@@ -92,7 +92,7 @@ namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
                 return new PostOrderVm
                 {
                     Status = "Ok",
-                    OrdersData =  new OrderVmDto
+                    OrdersData = new OrderVmDto
                     {
                         Order_Time = entity!.Order_Time,
                         Meal_Date = entity!.Meal_Date,
@@ -100,7 +100,7 @@ namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
                         Payment_Url = entity.Payment_Url,
                         Address = entity.Address,
                         User_Name = userData!.Name,
-                        Bank_Number = request.OrderData.Bank_Number
+                        Bank_Number = request.OrderData.Bank_Number,
                     }
                 };
             }
