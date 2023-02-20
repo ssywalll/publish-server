@@ -1,7 +1,6 @@
 using AutoMapper;
 using MediatR;
 using System.Net;
-using Microsoft.EntityFrameworkCore;
 using CleanArchitecture.Application.Common.Context;
 using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
