@@ -30,7 +30,7 @@ namespace CleanArchitecture.Application.FoodDrinkOrders.Commands.CreateFoodDrink
             {
                 Food_Drink_Id = request.Food_Drink_Id,
                 Order_Id = request.Order_Id,
-                Quantity = request.Quantity
+                Quantity = request.Quantity,
             };
 
             _context.FoodDrinkOrders.Add(entity);

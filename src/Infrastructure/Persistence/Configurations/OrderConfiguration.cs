@@ -29,6 +29,12 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
           .OnDelete(DeleteBehavior.Cascade)
           .IsRequired();
 
-
+        // builder
+        // .HasOne(x => x.FoodDrinkMenus)
+        // .WithMany(y => y.Orders)
+        // .HasForeignKey(z => z.Food_Drink_Menu_Id)
+        // .HasConstraintName("Fk_Order_FoodDrinkMenu")
+        // .OnDelete(DeleteBehavior.Cascade)
+        // .IsRequired();
     }
 }

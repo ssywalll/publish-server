@@ -1,3 +1,4 @@
+using CleanArchitecture.Application.Common.Models;
 using CleanArchitecture.Application.CreateOrders.Commands.CreateOrder;
 using CleanArchitecture.Application.Orders.Commands.CreateOrder;
 using CleanArchitecture.Application.Orders.Commands.DeleteOrder;
@@ -5,7 +6,6 @@ using CleanArchitecture.Application.Orders.Commands.UpdateOrder;
 using CleanArchitecture.Application.Orders.Queries.ExportOrder;
 using CleanArchitecture.Application.Orders.Queries.ExportOrders;
 using CleanArchitecture.Application.Orders.Queries.GetOrders;
-using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.WebUI.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,9 +17,16 @@ namespace WebUI.Controllers
     public class OrdersController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<OrdersVm>> Handle()
+        public async Task<ActionResult<OrderDto>> Handle(int id)
         {
-            return await Mediator.Send(new GetOrdersQuery());
+            var vm = await Mediator.Send(new ExportOrdersQuery { Id = id });
+            return Ok(vm);
+        }
+
+        [HttpGet("Switch")]
+        public async Task<ActionResult<PaginatedList<OrderWaitingDto>>> Get([FromQuery] GetOrderWithPagination query)
+        {
+            return await Mediator.Send(query);
         }
 
         [HttpGet("{id}")]
@@ -45,19 +52,14 @@ namespace WebUI.Controllers
         public async Task<ActionResult> Delete(int id)
         {
             await Mediator.Send(new DeleteOrderCommand(id));
-
             return NoContent();
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, UpdateOrderCommand command)
+        [HttpPut("Update")]
+        public async Task<ActionResult> Update(UpdateOrderCommand command)
         {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
             await Mediator.Send(command);
-            return Ok();
+            return NoContent();
         }
     }
 }

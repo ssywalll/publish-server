@@ -44,7 +44,7 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.CreateFoodDrinkM
                 Price = request.Price,
                 Min_Order = request.Min_Order,
                 Description = request.Description,
-                Image_Url = request.Image_Url
+                Image_Url = request.Image_Url,
             };
 
             return await Aprizax.Insert<FoodDrinkMenu>

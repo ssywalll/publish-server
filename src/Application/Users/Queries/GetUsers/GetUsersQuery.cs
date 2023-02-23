@@ -31,14 +31,6 @@ namespace CleanArchitecture.Application.Users.Queries.GetUsers
 
         public async Task<PaginatedList<UserDto>> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
-            // return new UsersVm
-            // {
-            //     Status = "Ok",
-            //     Data = await _context.Users
-            //         .AsNoTracking()
-            //         .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
-            //         .ToListAsync(cancellationToken)
-            // };
             return await _context.Users
                     .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
                     .PaginatedListAsync(request.PageNumber, request.PageSize);

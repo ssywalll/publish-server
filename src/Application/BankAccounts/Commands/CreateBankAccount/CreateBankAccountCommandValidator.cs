@@ -16,7 +16,7 @@ namespace CleanArchitecture.Application.BankAccounts.Commands.CreateBankAccount
         {
             _context = context;
 
-            RuleFor(x => x.User_Id)
+            RuleFor(x => x.Token)
                 .NotEmpty().WithMessage("User Id is Required.")
                 .NotNull();
         }

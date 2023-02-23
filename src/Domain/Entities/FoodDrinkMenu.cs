@@ -11,6 +11,5 @@ namespace CleanArchitecture.Domain.Entities
         public List<Review>? Reviews { get; set; }
         public List<Tag>? Tags { get; set; }
         public List<FoodDrinkOrder>? FoodDrinkOrders { get; set; }
-
     }
 }

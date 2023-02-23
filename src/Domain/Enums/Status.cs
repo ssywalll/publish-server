@@ -5,7 +5,7 @@ namespace CleanArchitecture.Domain.Enums
         Waiting,
         OnProcces,
         OnDelivery,
-        Canceled,
-        Successful
+        Successful,
+        Canceled
     }
 }
