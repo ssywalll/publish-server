@@ -10,6 +10,5 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.ExportFoodDrinkMe
     {
         public string Status { get; set; } = string.Empty;
         public IList<FoodDrinkMenuDto> Data { get; set; } = new List<FoodDrinkMenuDto>();
-        public IList<ExportFoodDrinkMenuDto> Reviews { get; set; } = new List<ExportFoodDrinkMenuDto>();
     }
 }

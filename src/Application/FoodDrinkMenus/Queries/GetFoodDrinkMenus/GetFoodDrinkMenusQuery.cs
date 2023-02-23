@@ -11,9 +11,9 @@ using CleanArchitecture.Application.Common.Models;
 
 namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.GetFoodDrinkMenus
 {
-    public record GetFoodDrinkMenusQuery : IRequest<FoodDrinkMenusVm>;
+    public record GetFoodDrinkMenusQuery : IRequest<FoodDrinkMenuDto>;
 
-    public class GetFoodDrinkMenusQueryHandler : IRequestHandler<GetFoodDrinkMenusQuery, FoodDrinkMenusVm>
+    public class GetFoodDrinkMenusQueryHandler : IRequestHandler<GetFoodDrinkMenusQuery, FoodDrinkMenuDto>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -24,17 +24,13 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.GetFoodDrinkMenus
             _mapper = mapper;
         }
 
-        public async Task<FoodDrinkMenusVm> Handle(GetFoodDrinkMenusQuery request, CancellationToken cancellationToken)
+        public async Task<FoodDrinkMenuDto> Handle(GetFoodDrinkMenusQuery request, CancellationToken cancellationToken)
         {
-            return new FoodDrinkMenusVm
-            {
-                Status = "Ok",
-                Data = await _context.FoodDrinkMenus
+            return await _context.FoodDrinkMenus
                     .AsNoTracking()
                     .ProjectTo<FoodDrinkMenuDto>(_mapper.ConfigurationProvider)
                     .OrderBy(t => t.Name)
-                    .ToListAsync(cancellationToken)
-            };
+                    .SingleOrDefaultAsync(cancellationToken);
         }
     }
 }
