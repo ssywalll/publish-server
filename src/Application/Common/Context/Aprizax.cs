@@ -109,8 +109,7 @@ namespace CleanArchitecture.Application.Common.Context
             var user_Carts = carts
                 .Where(x => x.User_Id.Equals(user_Id))
                 .ToList();
-            var quantityCount = 0;
-            user_Carts.ForEach(x => quantityCount += x.Quantity);
+            var quantityCount = user_Carts.Sum(x => x.Quantity);
 
             if (quantityCount.Equals(0)) return null;
             return Convert.ToString(quantityCount);
