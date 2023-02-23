@@ -6,7 +6,6 @@ using CleanArchitecture.Application.Orders.Commands.UpdateOrder;
 using CleanArchitecture.Application.Orders.Queries.ExportOrder;
 using CleanArchitecture.Application.Orders.Queries.ExportOrders;
 using CleanArchitecture.Application.Orders.Queries.GetOrders;
-using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.WebUI.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,31 +17,14 @@ namespace WebUI.Controllers
     public class OrdersController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<OrdersVm>> Handle()
+        public async Task<ActionResult<OrderDto>> Handle(int id)
         {
-            return await Mediator.Send(new GetOrdersQuery());
+            var vm = await Mediator.Send(new ExportOrdersQuery { Id = id });
+            return Ok(vm);
         }
 
-        [HttpGet("Waiting")]
-        public async Task<ActionResult<PaginatedList<OrderWaitingDto>>> GetWaiting([FromQuery] GetOrderStatusWaiting query)
-        {
-            return await Mediator.Send(query);
-        }
-
-        [HttpGet("OnProcces")]
-        public async Task<ActionResult<PaginatedList<OrderWaitingDto>>> GetOnProcces([FromQuery] GetOrderOnProcces query)
-        {
-            return await Mediator.Send(query);
-        }
-
-        [HttpGet("OnDelivery")]
-        public async Task<ActionResult<PaginatedList<OrderWaitingDto>>> GetOnDelivery([FromQuery] GetOrderOnDelivery query)
-        {
-            return await Mediator.Send(query);
-        }
-
-        [HttpGet("Successful")]
-        public async Task<ActionResult<PaginatedList<OrderWaitingDto>>> GetSuccessful([FromQuery] GetOrderSuccessful query)
+        [HttpGet("Switch")]
+        public async Task<ActionResult<PaginatedList<OrderWaitingDto>>> Get([FromQuery] GetOrderWithPagination query)
         {
             return await Mediator.Send(query);
         }
@@ -70,19 +52,14 @@ namespace WebUI.Controllers
         public async Task<ActionResult> Delete(int id)
         {
             await Mediator.Send(new DeleteOrderCommand(id));
-
             return NoContent();
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, UpdateOrderCommand command)
+        [HttpPut("Update")]
+        public async Task<ActionResult> Update(UpdateOrderCommand command)
         {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
             await Mediator.Send(command);
-            return Ok();
+            return NoContent();
         }
     }
 }

@@ -6,9 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.Orders.Queries.GetOrders
 {
-    public record GetOrdersQuery : IRequest<OrdersVm>;
+    public record GetOrdersQuery : IRequest<OrderDto>
+    {
+        public int Id { get; init;}
+    }
 
-    public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, OrdersVm>
+    public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, OrderDto>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -19,16 +22,13 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
             _mapper = mapper;
         }
 
-        public async Task<OrdersVm> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
+        public async Task<OrderDto> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
         {
-            return new OrdersVm
-            {
-                Status = "Ok",
-                Data = await _context.Orders
+             return await _context.Orders
+                    .Where(x => x.Id.Equals(request.Id))
                     .AsNoTracking()
                     .ProjectTo<OrderDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken)
-            };
+                    .SingleOrDefaultAsync(cancellationToken);
         }
     }
 }

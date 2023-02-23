@@ -74,6 +74,7 @@ namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
                     .Where(x => x.User_Id == userData!.Id)
                     .Where(y => y.IsChecked == true)
                     .ToListAsync(cancellationToken);
+                
 
                 foreach (var item in cartsData)
                 {

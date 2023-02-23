@@ -7,6 +7,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Globalization;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Domain.Entities;
@@ -113,6 +114,11 @@ namespace CleanArchitecture.Application.Common.Context
 
             if (quantityCount.Equals(0)) return null;
             return Convert.ToString(quantityCount);
+        }
+        public static string? GetFormattedDate(this DateTime date)
+        {
+            var format = new CultureInfo("id-ID");
+            return date.ToString("dddd, dd MMMM yyyy", format);
         }
     }
 }

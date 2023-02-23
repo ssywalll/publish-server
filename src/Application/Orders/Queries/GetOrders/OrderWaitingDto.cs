@@ -23,11 +23,12 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
                     s => s.FoodDrinkOrders!
                     .Where(t => t.Order_Id == s.Id)
                     .Sum(u => u.Quantity)
+                ))
+                .ForMember(d => d.TotalPriceOrdered, opt => opt.MapFrom(
+                    s => s.FoodDrinkOrders!.Sum(
+                        t => t.Quantity * t.FoodDrinkMenus!.Price
+                    )
                 ));
-                // .ForMember(d => d.TotalPriceOrdered, opt => opt.MapFrom(
-                //     s => s.FoodDrinkOrders!
-                //     .Where(t => t.Order_Id == Id)
-                //     .Sum(u => u.Quantity * u.Price)));
         }
     }
 }

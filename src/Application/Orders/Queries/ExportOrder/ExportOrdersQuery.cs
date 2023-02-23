@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.Orders.Queries.ExportOrders
 {
-    public record ExportOrdersQuery : IRequest<OrdersVm>
+    public record ExportOrdersQuery : IRequest<OrderDto>
     {
         public int Id { get; set; }
     }
 
-    public class ExportOrdersQueryHandler : IRequestHandler<ExportOrdersQuery, OrdersVm>
+    public class ExportOrdersQueryHandler : IRequestHandler<ExportOrdersQuery, OrderDto>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -23,16 +23,13 @@ namespace CleanArchitecture.Application.Orders.Queries.ExportOrders
             _mapper = mapper;
         }
 
-        public async Task<OrdersVm> Handle(ExportOrdersQuery request, CancellationToken cancellationToken)
+        public async Task<OrderDto> Handle(ExportOrdersQuery request, CancellationToken cancellationToken)
         {
-            return new OrdersVm
-            {
-                Data = await _context.Orders
+                return await _context.Orders
                    .Where(x => x.Id == request.Id)
                    .AsNoTracking()
                    .ProjectTo<OrderDto>(_mapper.ConfigurationProvider)
-                   .ToListAsync(cancellationToken)
-            };
+                   .SingleOrDefaultAsync(cancellationToken);
         }
 
     }

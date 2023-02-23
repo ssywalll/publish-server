@@ -3,16 +3,14 @@ using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Domain.Enums;
 using CleanArchitecture.Application.Common.Interfaces;
 using MediatR;
+using System.Net;
 
 namespace CleanArchitecture.Application.Orders.Commands.UpdateOrder
 {
     public record UpdateOrderCommand : IRequest
     {
         public int Id { get; set; }
-        public int User_Id { get; set; }
-        public DateTime Meal_Date { get; set; }
-        public string Address { get; set; } = string.Empty;
-        public int BankAccount_Id { get; set; }
+        public bool IsForward { get; set; }
     }
 
     public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand>
@@ -35,13 +33,20 @@ namespace CleanArchitecture.Application.Orders.Commands.UpdateOrder
             {
                 throw new NotFoundException(nameof(Orders), request.Id);
             }
-            entity.User_Id = request.User_Id;
-            entity.Meal_Date = request.Meal_Date;
-            entity.Address = request.Address;
-            entity.BankAccount_Id = request.BankAccount_Id;
 
 
-
+            if (request.IsForward)
+            {
+                if (entity.Status == Domain.Enums.Status.Successful)
+                    throw new NotFoundException("Status Max", HttpStatusCode.BadRequest);
+                entity.Status++;
+            }
+            else
+            {
+                if (entity.Status == 0 )
+                    throw new NotFoundException("Status Min", HttpStatusCode.BadRequest);
+                entity.Status--;
+            }
 
             await _context.SaveChangesAsync(cancellationToken);
 

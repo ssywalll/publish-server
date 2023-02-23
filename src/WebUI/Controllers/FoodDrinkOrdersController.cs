@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CleanArchitecture.Application.FoodDrinkOrders.Commands.CreateFoodDrinkOrder;
 using CleanArchitecture.Application.FoodDrinkOrders.Commands.DeleteFoodDrinkOrder;
 using CleanArchitecture.Application.FoodDrinkOrders.Commands.UpdateFoodDrinkOrder;
+using CleanArchitecture.Application.FoodDrinkOrders.Queries.ExportFoodDrinkOrder;
 using CleanArchitecture.Application.FoodDrinkOrders.Queries.ExportFoodDrinkOrders;
 using CleanArchitecture.Application.FoodDrinkOrders.Queries.GetFoodDrinkOrders;
 using CleanArchitecture.Domain.Entities;
@@ -26,6 +27,13 @@ namespace WebUI.Controllers
         public async Task<ActionResult> Get(int id)
         {
             var vm = await Mediator.Send(new ExportFoodDrinkOrdersQuery { Id = id });
+            return Ok(vm);
+        }
+
+        [HttpGet("WithOrderId")]
+        public async Task<ActionResult> GetOrderId(int id)
+        {
+            var vm = await Mediator.Send(new GetWithOrderId { OrderId = id });
             return Ok(vm);
         }
 
