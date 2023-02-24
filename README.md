@@ -67,6 +67,10 @@ For example, to add a new migration from the root folder:
 
  `dotnet ef migrations add "SampleMigration" --project src/Infrastructure --startup-project src/WebUI --output-dir Persistence/Migrations`
 
+ Don't forget to update the database with this code :
+ 
+ `dotnet ef database update --project src/Infrastructure --startup-project src/WebUI`
+
 ## Overview
 
 ### Domain
