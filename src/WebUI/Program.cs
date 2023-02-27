@@ -33,15 +33,18 @@ builder.Services.Configure<JwtSettings>(_jwtsettings);
 
 var _authkey = builder.Configuration.GetValue<string>("JwtSettings:securitykey");
 
-builder.Services.AddAuthentication(item =>{
+builder.Services.AddAuthentication(item =>
+{
     item.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     item.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(item => {
+}).AddJwtBearer(item =>
+{
     item.RequireHttpsMetadata = true;
     item.SaveToken = true;
-    item.TokenValidationParameters = new TokenValidationParameters(){
+    item.TokenValidationParameters = new TokenValidationParameters()
+    {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authkey)),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authkey!)),
         ValidateIssuer = false,
         ValidateAudience = false,
         ClockSkew = TimeSpan.Zero
@@ -49,7 +52,6 @@ builder.Services.AddAuthentication(item =>{
 });
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
