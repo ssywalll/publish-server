@@ -7,6 +7,7 @@ using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Application.Common.Mappings;
 using CleanArchitecture.Application.Common.Models;
+using CleanArchitecture.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +15,8 @@ namespace CleanArchitecture.Application.Users.Queries.GetUsers
 {
     public record GetUserQuery : IRequest<PaginatedList<UserDto>>
     {
-         public int PageNumber { get; init; } = 1;
+        public string? Keyword { get; set; }
+        public int PageNumber { get; init; } = 1;
         public int PageSize { get; init; } = 10;
     }
 
@@ -31,7 +33,13 @@ namespace CleanArchitecture.Application.Users.Queries.GetUsers
 
         public async Task<PaginatedList<UserDto>> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Users
+            IQueryable<User> users = _context.Users;
+            if (String.IsNullOrWhiteSpace(request.Keyword) is false)
+                users = users.Where(
+                    x => (x.Name.ToLower() + x.Email.ToLower()).Contains(request.Keyword.ToLower())
+                );
+
+            return await users
                     .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
                     .PaginatedListAsync(request.PageNumber, request.PageSize);
         }
