@@ -9,14 +9,14 @@ public interface IApplicationDbContext
 
     DbSet<TodoItem> TodoItems { get; }
 
-    DbSet<User> Users { get;}
+    DbSet<User> Users { get; }
 
     DbSet<BankAccount> BankAccounts { get; }
 
     DbSet<Cart> Carts { get; }
 
     DbSet<FoodDrinkMenu> FoodDrinkMenus { get; }
-    
+
     DbSet<FoodDrinkOrder> FoodDrinkOrders { get; }
 
     DbSet<JwtSettings> JwtSettings { get; }
@@ -24,8 +24,6 @@ public interface IApplicationDbContext
     DbSet<Order> Orders { get; }
 
     DbSet<Review> Reviews { get; }
-
-    DbSet<Role> Roles { get; }
 
     DbSet<Tag> Tags { get; }
 
