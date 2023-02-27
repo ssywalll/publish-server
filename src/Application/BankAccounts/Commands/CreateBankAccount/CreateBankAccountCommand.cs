@@ -4,6 +4,7 @@ using CleanArchitecture.Application.Common.Context;
 using CleanArchitecture.Domain.Entities;
 using MediatR;
 using System.Net;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.BankAccounts.Commands.CreateBankAccount
 {
@@ -32,6 +33,14 @@ namespace CleanArchitecture.Application.BankAccounts.Commands.CreateBankAccount
 
             if (tokenInfo.Is_Valid is false)
                 throw new NotFoundException("Token tidak ditemukan", HttpStatusCode.BadRequest);
+
+            var bankCount = await _context.BankAccounts
+                    .Where(x => x.User_Id.Equals(tokenInfo.Owner_Id))
+                    .AsNoTracking()
+                    .CountAsync(cancellationToken);
+
+            if (bankCount >= 2)
+                throw new NotFoundException("Bank yang anda miliki telah melewati batas", HttpStatusCode.BadRequest);
 
             var entity = new BankAccount
             {
