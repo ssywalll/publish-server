@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 using CleanArchitecture.Application.BankAccounts.Queries.ExportBankAccounts;
 using CleanArchitecture.Application.BankAccounts.Commands.DeleteBankAccount;
 using CleanArchitecture.Application.BankAccounts.Commands.UpdateBankAccount;
-using CleanArchitecture.Application.BankAccounts.Queries.ExportBankAccounts.cs;
 using MediatR;
 
 namespace WebUI.Controllers
@@ -21,13 +20,13 @@ namespace WebUI.Controllers
     public class BankAccountsController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<BankAccountsVm>> Get()
+        public async Task<ActionResult<BankAccountsVm>> Get([FromQuery] GetBankAccountQuery command)
         {
-            return await Mediator.Send(new GetBankAccountQuery());
+            return await Mediator.Send(command);
         }
 
         [HttpPost]
-        public async Task<ActionResult<BankAccount>> Create(CreateBankAccountCommand command)
+        public async Task<ActionResult<Unit>> Create(CreateBankAccountCommand command)
         {
             return await Mediator.Send(command);
         }
@@ -39,28 +38,17 @@ namespace WebUI.Controllers
             return Ok(vm);
         }
 
-        [HttpGet("Token")]
-        public async Task<ActionResult<BankAccountDto>> GetToken([FromHeader(Name = "Authorization")] GetBankAccountByToken query)
+        [HttpDelete]
+        public async Task<ActionResult> Delete([FromQuery] DeleteBankAccountCommand command)
         {
-            return await Mediator.Send(query);
-        } 
-
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            await Mediator.Send(new DeleteBankAccountCommand(id));
+            await Mediator.Send(command);
 
             return Ok();
         }
 
-        [HttpPut("{Id}")]
-        public async Task<ActionResult> Update(int Id, UpdateBankAccountCommand command)
+        [HttpPut]
+        public async Task<ActionResult> Update(UpdateBankAccountCommand command)
         {
-            if (Id != command.Id)
-            {
-                return BadRequest();
-            }
             await Mediator.Send(command);
 
             return Ok();
