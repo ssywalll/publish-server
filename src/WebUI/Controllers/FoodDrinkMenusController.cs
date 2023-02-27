@@ -29,32 +29,32 @@ namespace WebUI.Controllers
         [HttpGet("{id}/detail")]
         public async Task<IActionResult> Get(int id)
         {
-            var vm = await Mediator.Send(new ExportFoodDrinkMenusQuery {Id = id});
+            var vm = await Mediator.Send(new ExportFoodDrinkMenusQuery { Id = id });
 
             return Ok(vm);
         }
 
         [Authorize(Roles = "admin")]
-        [HttpPost]
+        [HttpPost("Post")]
         public async Task<ActionResult<FoodDrinkMenu>> Create(CreateFoodDrinkMenuCommand command)
         {
             return Ok(await Mediator.Send(command));
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}/edit")]
         public async Task<ActionResult> Update(int id, UpdateFoodDrinkMenuCommand command)
         {
-           if(id != command.Id)
-           {
+            if (id != command.Id)
+            {
                 return BadRequest();
-           }
+            }
 
-           await Mediator.Send(command);
+            await Mediator.Send(command);
 
-           return Ok(); 
+            return Ok();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}delete")]
         public async Task<ActionResult> Delete(int id)
         {
             await Mediator.Send(new DeleteFoodDrinkMenuCommand(id));
