@@ -30,7 +30,7 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.GetFoodDrinkMenus
                     .AsNoTracking()
                     .ProjectTo<FoodDrinkMenuDto>(_mapper.ConfigurationProvider)
                     .OrderBy(t => t.Name)
-                    .SingleOrDefaultAsync(cancellationToken);
+                    .SingleAsync(cancellationToken);
         }
     }
 }

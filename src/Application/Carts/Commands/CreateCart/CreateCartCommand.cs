@@ -58,7 +58,7 @@ namespace CleanArchitecture.Application.Carts.Commands.CreateCart
             return new CreateCartVm
             {
                 Status = "Ok",
-                CurrentQuantity = _context.Carts.GetCurrentQuantity(tokenInfo.Owner_Id)
+                CurrentQuantity = await _context.Carts.GetCurrentQuantity(tokenInfo.Owner_Id)
             };
         }
     }

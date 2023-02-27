@@ -1,16 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Application.Common.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Application.Common.Exceptions;
+using System.Net;
 
 namespace CleanArchitecture.Application.BankAccounts.Queries.GetBankAccounts
 {
-    public record GetBankAccountQuery : IRequest<BankAccountsVm>;
+    public record GetBankAccountQuery : UseAprizax, IRequest<BankAccountsVm>;
 
     public class GetBankAccountQueryHandler : IRequestHandler<GetBankAccountQuery, BankAccountsVm>
     {
@@ -25,10 +24,25 @@ namespace CleanArchitecture.Application.BankAccounts.Queries.GetBankAccounts
 
         public async Task<BankAccountsVm> Handle(GetBankAccountQuery request, CancellationToken cancellationToken)
         {
+            if (request is null)
+                throw new NotFoundException("Request anda kosong!", HttpStatusCode.BadRequest);
+
+            var tokenInfo = request.GetTokenInfo();
+
+            if (tokenInfo.Is_Valid is false)
+                throw new NotFoundException("Token tidak ditemukan", HttpStatusCode.BadRequest);
+
+            var bankCount = await _context.BankAccounts
+                    .Where(x => x.User_Id.Equals(tokenInfo.Owner_Id))
+                    .AsNoTracking()
+                    .CountAsync(cancellationToken);
+
             return new BankAccountsVm
             {
                 Status = "Ok",
+                IsLimit = bankCount >= 2,
                 Data = await _context.BankAccounts
+                    .Where(x => x.User_Id.Equals(tokenInfo.Owner_Id))
                     .AsNoTracking()
                     .ProjectTo<BankAccountDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken)

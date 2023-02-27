@@ -21,7 +21,7 @@ namespace CleanArchitecture.Application.Reviews.Queries.ExportReviews
     {
         [FromHeader(Name = "Authorization")]
         public string? Token { get; init; }
-    } 
+    }
 
     public class GetReviewsByTokenHandler : IRequestHandler<GetReviewsByToken, ReviewDto>
     {
@@ -36,17 +36,17 @@ namespace CleanArchitecture.Application.Reviews.Queries.ExportReviews
 
         public async Task<ReviewDto> Handle(GetReviewsByToken request, CancellationToken cancellationToken)
         {
-            if(request == null)
+            if (request == null)
                 return null!;
 
-            string[] tokenSplit = request.Token!.Split(new char[] {});
+            string[] tokenSplit = request.Token!.Split(new char[] { });
 
-            if(tokenSplit == null)
+            if (tokenSplit == null)
                 throw new NotFoundException("Token Tidak Ada Harap Login Kembali", HttpStatusCode.BadRequest);
 
 
             var key = Encoding.UTF8.GetBytes("v8y/B?E(H+MbQeThWmZq3t6w9z$C&F)J@NcRfUjXn2r5u7x!A%D*G-KaPdSgVkYp");
-            var secretKey =  new SymmetricSecurityKey(key);
+            var secretKey = new SymmetricSecurityKey(key);
             var tokenHandler = new JwtSecurityTokenHandler();
 
             try
@@ -62,18 +62,18 @@ namespace CleanArchitecture.Application.Reviews.Queries.ExportReviews
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var user = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
-                
+
                 return await _context.Reviews
                     .Where(x => x.User_Id == user)
                     .AsNoTracking()
                     .ProjectTo<ReviewDto>(_mapper.ConfigurationProvider)
-                    .SingleOrDefaultAsync(cancellationToken);
+                    .SingleAsync(cancellationToken);
 
 
             }
             catch
             {
-               throw new NotFoundException("Token Tidak Valid", HttpStatusCode.BadRequest);
+                throw new NotFoundException("Token Tidak Valid", HttpStatusCode.BadRequest);
             }
         }
     }

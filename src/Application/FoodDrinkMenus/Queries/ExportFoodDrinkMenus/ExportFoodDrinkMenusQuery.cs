@@ -31,9 +31,9 @@ public class ExportFoodDrinkMenusQueryHandler : IRequestHandler<ExportFoodDrinkM
     public async Task<FoodDrinkMenuDto> Handle(ExportFoodDrinkMenusQuery request, CancellationToken cancellationToken)
     {
         return await _context.FoodDrinkMenus
-                 .Where(x => x.Id == request.Id)
-                 .AsNoTracking()
-                 .ProjectTo<FoodDrinkMenuDto>(_mapper.ConfigurationProvider)
-                 .SingleOrDefaultAsync(cancellationToken);
+            .Where(x => x.Id == request.Id)
+            .AsNoTracking()
+            .ProjectTo<FoodDrinkMenuDto>(_mapper.ConfigurationProvider)
+            .SingleAsync(cancellationToken);
     }
 }

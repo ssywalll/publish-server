@@ -25,11 +25,11 @@ namespace CleanArchitecture.Application.Orders.Queries.ExportOrders
 
         public async Task<OrderDto> Handle(ExportOrdersQuery request, CancellationToken cancellationToken)
         {
-                return await _context.Orders
-                   .Where(x => x.Id == request.Id)
-                   .AsNoTracking()
-                   .ProjectTo<OrderDto>(_mapper.ConfigurationProvider)
-                   .SingleOrDefaultAsync(cancellationToken);
+            return await _context.Orders
+               .Where(x => x.Id == request.Id)
+               .AsNoTracking()
+               .ProjectTo<OrderDto>(_mapper.ConfigurationProvider)
+               .SingleAsync(cancellationToken);
         }
 
     }

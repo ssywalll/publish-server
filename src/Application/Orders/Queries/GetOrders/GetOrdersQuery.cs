@@ -8,7 +8,7 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
 {
     public record GetOrdersQuery : IRequest<OrderDto>
     {
-        public int Id { get; init;}
+        public int Id { get; init; }
     }
 
     public class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, OrderDto>
@@ -24,11 +24,11 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
 
         public async Task<OrderDto> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
         {
-             return await _context.Orders
-                    .Where(x => x.Id.Equals(request.Id))
-                    .AsNoTracking()
-                    .ProjectTo<OrderDto>(_mapper.ConfigurationProvider)
-                    .SingleOrDefaultAsync(cancellationToken);
+            return await _context.Orders
+                .Where(x => x.Id.Equals(request.Id))
+                .AsNoTracking()
+                .ProjectTo<OrderDto>(_mapper.ConfigurationProvider)
+                .SingleAsync(cancellationToken);
         }
     }
 }

@@ -102,14 +102,15 @@ namespace CleanArchitecture.Application.Common.Context
             source.OrderBy(keySelector) : source.OrderByDescending(keySelector);
         }
 
-        public static string? GetCurrentQuantity(this DbSet<Cart> carts, int? user_Id)
+        public static async Task<string?> GetCurrentQuantity(this DbSet<Cart> carts, int? userId)
         {
-            if (user_Id is null)
+            if (userId is null)
                 throw new NullReferenceException("Pastikan User Id telah terisi");
-            var user_Carts = carts
-                .Where(x => x.User_Id.Equals(user_Id))
-                .ToList();
-            var quantityCount = user_Carts.Sum(x => x.Quantity);
+
+            var quantityCount = await carts
+                .Where(x => x.User_Id.Equals(userId))
+                .AsNoTracking()
+                .SumAsync(y => y.Quantity);
 
             if (quantityCount.Equals(0)) return null;
             return Convert.ToString(quantityCount);

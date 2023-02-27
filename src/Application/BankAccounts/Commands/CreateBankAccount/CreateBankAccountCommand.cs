@@ -1,71 +1,60 @@
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Application.Common.Context;
 using CleanArchitecture.Domain.Entities;
 using MediatR;
+using System.Net;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace CleanArchitecture.Application.BankAccounts.Commands.CreateBankAccount
 {
-    public record CreateBankAccountCommand : IRequest<BankAccount>
+    public record CreateBankAccountCommand : UseAprizax, IRequest
     {
-        public string? Token { get; init; }
-        public string Bank_Number { get; init; } = string.Empty;
+        public string BankNumber { get; init; } = string.Empty;
         public string Name { get; init; } = string.Empty;
-        public string Bank_Name { get; init; } = string.Empty;
+        public string BankName { get; init; } = string.Empty;
+
     }
 
-    public class CreateBankAccountCommandHandler : IRequestHandler<CreateBankAccountCommand, BankAccount>
+    public class CreateBankAccountCommandHandler : IRequestHandler<CreateBankAccountCommand, Unit>
     {
         private readonly IApplicationDbContext _context;
-
         public CreateBankAccountCommandHandler(IApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<BankAccount> Handle(CreateBankAccountCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CreateBankAccountCommand request, CancellationToken cancellationToken)
         {
-            var key = Encoding.UTF8.GetBytes("v8y/B?E(H+MbQeThWmZq3t6w9z$C&F)J@NcRfUjXn2r5u7x!A%D*G-KaPdSgVkYp");
-            var secretKey = new SymmetricSecurityKey(key);
-            var tokenHandler = new JwtSecurityTokenHandler();
-            try
+            if (request is null)
+                throw new NotFoundException("Request anda kosong!", HttpStatusCode.BadRequest);
+
+            var tokenInfo = request.GetTokenInfo();
+
+            if (tokenInfo.Is_Valid is false)
+                throw new NotFoundException("Token tidak ditemukan", HttpStatusCode.BadRequest);
+
+            var bankCount = await _context.BankAccounts
+                    .Where(x => x.User_Id.Equals(tokenInfo.Owner_Id))
+                    .AsNoTracking()
+                    .CountAsync(cancellationToken);
+
+            if (bankCount >= 2)
+                throw new NotFoundException("Bank yang anda miliki telah melewati batas", HttpStatusCode.BadRequest);
+
+            var entity = new BankAccount
             {
-                tokenHandler.ValidateToken(request.Token, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ClockSkew = TimeSpan.Zero
-                }, out SecurityToken validatedToken);
+                Bank_Number = request.BankNumber,
+                Name = request.Name.ToUpper(),
+                Bank_Name = request.BankName.ToUpper(),
+                User_Id = tokenInfo.Owner_Id ?? 0
+            };
 
-                var jwtToken = (JwtSecurityToken)validatedToken;
-                var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
+            _context.BankAccounts.Add(entity);
 
-                var entity = new BankAccount
-                {
-                    Bank_Number = request.Bank_Number,
-                    Name = request.Name,
-                    Bank_Name = request.Bank_Name,
-                    User_Id = userId
-                };
+            await _context.SaveChangesAsync(cancellationToken);
 
-                _context.BankAccounts.Add(entity);
-                await _context.SaveChangesAsync(cancellationToken);
-
-                return entity;
-            }
-            catch
-            {
-                return null!;
-            }
+            return Unit.Value;
         }
     }
 }

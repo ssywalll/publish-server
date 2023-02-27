@@ -12,7 +12,7 @@ namespace CleanArchitecture.Application.Carts.Commands.DeleteCart
         public string? Status { get; set; }
         public string? Data { get; set; }
     }
-    public record CurrentQuantityCart : UseAprizax, IRequest<CurrentQuantityCartVm> { }
+    public record CurrentQuantityCart : UseAprizax, IRequest<CurrentQuantityCartVm>;
 
     public class CurrentQuantityCartHandler : IRequestHandler<CurrentQuantityCart, CurrentQuantityCartVm>
     {
@@ -33,7 +33,7 @@ namespace CleanArchitecture.Application.Carts.Commands.DeleteCart
             return new CurrentQuantityCartVm
             {
                 Status = "Ok",
-                Data = _context.Carts.GetCurrentQuantity(tokenInfo.Owner_Id)
+                Data = await _context.Carts.GetCurrentQuantity(tokenInfo.Owner_Id)
             };
         }
     }
