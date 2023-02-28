@@ -41,12 +41,12 @@ namespace CleanArchitecture.Application.BankAccounts.Commands.UpdateBankAccount
             if (entity is null)
                 throw new NotFoundException("Bank tidak ditemukan", HttpStatusCode.BadRequest);
 
-            if (entity.User_Id.Equals(tokenInfo.Owner_Id) is false)
+            if (entity.UserId.Equals(tokenInfo.Owner_Id) is false)
                 throw new NotFoundException("Bank ini bukan milik anda", HttpStatusCode.BadRequest);
 
-            entity.Bank_Number = request.BankNumber;
+            entity.BankNumber = request.BankNumber;
             entity.Name = request.Name.ToUpper();
-            entity.Bank_Name = request.BankName.ToUpper();
+            entity.BankName = request.BankName.ToUpper();
 
             await _context.SaveChangesAsync(cancellationToken);
 

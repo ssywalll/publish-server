@@ -8,7 +8,7 @@ public class BankAccountConfiguration : IEntityTypeConfiguration<BankAccount>
 {
     public void Configure(EntityTypeBuilder<BankAccount> builder)
     {
-        builder.Property(n => n.Bank_Number)
+        builder.Property(n => n.BankNumber)
          .HasMaxLength(25);
         builder.Property(a => a.Name)
          .HasMaxLength(50);
@@ -16,7 +16,7 @@ public class BankAccountConfiguration : IEntityTypeConfiguration<BankAccount>
         builder
               .HasOne(t => t.Users)
               .WithMany(c => c.BankAccounts)
-              .HasForeignKey(t => t.User_Id)
+              .HasForeignKey(t => t.UserId)
               .HasConstraintName("Fk_BankAccount_User")
               .OnDelete(DeleteBehavior.Cascade)
               .IsRequired();
