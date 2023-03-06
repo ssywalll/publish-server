@@ -45,8 +45,6 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
     public DbSet<Review> Reviews => Set<Review>();
 
-    public DbSet<Role> Roles => Set<Role>();
-
     public DbSet<Tag> Tags => Set<Tag>();
 
     public DbSet<User> Users => Set<User>();
