@@ -10,5 +10,6 @@ namespace CleanArchitecture.Application.BankAccounts.Queries.GetBankAccounts
         public string BankNumber { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string BankName { get; set; } = string.Empty;
+        public bool IsChoosen { get; set; }
     }
 }

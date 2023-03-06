@@ -41,6 +41,12 @@ namespace WebUI.Controllers
             return await Mediator.Send(query);
         }
 
+        [HttpGet("Checkout")]
+        public async Task<ActionResult<CheckoutPreviewVm>> GetCheckout([FromQuery] CheckoutPreview query)
+        {
+            return await Mediator.Send(query);
+        }
+
         [HttpGet("CurrentQuantity")]
         public async Task<ActionResult<CurrentQuantityCartVm>> Get([FromQuery] CurrentQuantityCart query)
         {

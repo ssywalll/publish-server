@@ -8,10 +8,11 @@ using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.WebUI.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using MediatR;
 using CleanArchitecture.Application.BankAccounts.Queries.ExportBankAccounts;
 using CleanArchitecture.Application.BankAccounts.Commands.DeleteBankAccount;
 using CleanArchitecture.Application.BankAccounts.Commands.UpdateBankAccount;
-using MediatR;
+using CleanArchitecture.Application.BankAccounts.Commands.ChooseBankAccount;
 
 namespace WebUI.Controllers
 {
@@ -48,6 +49,14 @@ namespace WebUI.Controllers
 
         [HttpPut]
         public async Task<ActionResult> Update(UpdateBankAccountCommand command)
+        {
+            await Mediator.Send(command);
+
+            return Ok();
+        }
+
+        [HttpPut("Choose")]
+        public async Task<ActionResult> Choose([FromQuery] ChooseBankAccountCommand command)
         {
             await Mediator.Send(command);
 
