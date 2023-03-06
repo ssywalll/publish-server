@@ -9,8 +9,6 @@ namespace CleanArchitecture.Domain.Entities
         public string Payment_Url { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public string Bank_Number { get; set; } = string.Empty;
-
-
         public int User_Id { get; set; }
         public User? users { get; set; }
         public BankAccount? BankAccounts { get; set; }

@@ -1,4 +1,5 @@
 using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Application.Common.Context;
 using CleanArchitecture.Domain.Entities;
 using MediatR;
 using CleanArchitecture.Application.Orders.Commands.CreateOrder;
@@ -12,9 +13,8 @@ using AutoMapper;
 
 namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
 {
-    public record CreateOrderCommand : IRequest<PostOrderVm>
+    public record CreateOrderCommand : UseAprizax, IRequest<PostOrderVm>
     {
-        public string? Token { get; init; }
         public PostOrderDto? OrderData { get; init; }
     }
 
@@ -31,84 +31,97 @@ namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
 
         public async Task<PostOrderVm> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
-            if (request == null)
-                return null!;
+            if (request is null)
+                throw new NotFoundException("Request anda kosong!", HttpStatusCode.BadRequest);
 
-            var key = Encoding.UTF8.GetBytes("v8y/B?E(H+MbQeThWmZq3t6w9z$C&F)J@NcRfUjXn2r5u7x!A%D*G-KaPdSgVkYp");
-            var secretKey = new SymmetricSecurityKey(key);
-            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenInfo = request.GetTokenInfo();
 
-            try
+            if (tokenInfo.Is_Valid is false)
+                throw new NotFoundException("Token tidak ditemukan", HttpStatusCode.BadRequest);
+
+            var bankUser = await _context.BankAccounts
+                .Where(x => x.UserId.Equals(tokenInfo.Owner_Id) && x.IsChoosen)
+                .SingleAsync(cancellationToken);
+
+            var entity = new Order
             {
-                tokenHandler.ValidateToken(request.Token, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    IssuerSigningKey = secretKey,
-                    ClockSkew = TimeSpan.Zero
-                }, out SecurityToken validatedToken);
+                Meal_Date = request.OrderData!.MealDate,
+                Address = request.OrderData!.Address,
+                User_Id = tokenInfo.Owner_Id ?? 0,
+                BankAccount_Id = bankUser.Id,
+                Bank_Number = bankUser.BankNumber,
+            };
 
-                var jwtToken = (JwtSecurityToken)validatedToken;
-                var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
+            if (entity is null)
+                throw new NotFoundException("Order gagal dibuat", HttpStatusCode.BadRequest);
 
-                var entity = new Order
+            _context.Orders.Add(entity);
+            // await _context.SaveChangesAsync(cancellationToken);
+
+            // var userData = await _context.Users
+            //     .Where(x => x.Id == entity!.User_Id)
+            //     .SingleOrDefaultAsync(cancellationToken);
+
+            var cartUser = await _context.Carts
+                .Where(x => x.User_Id.Equals(tokenInfo.Owner_Id) && x.IsChecked)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+
+            // var cartsData = await _context.Carts
+            //     .Where(x => x.User_Id == userData!.Id)
+            //     .Where(y => y.IsChecked == true)
+            //     .ToListAsync(cancellationToken);
+
+            cartUser.ForEach(x =>
+            {
+                var foodDrinkOrder = new FoodDrinkOrder
                 {
-                    Meal_Date = request.OrderData!.Meal_Date,
-                    Address = request.OrderData!.Address,
-                    User_Id = userId,
-                    BankAccount_Id = request.OrderData!.BankAccount_Id
+                    Food_Drink_Id = x.Food_Drink_Id,
+                    Order_Id = entity!.Id,
+                    Quantity = x.Quantity,
                 };
 
-                if (entity != null)
-                {
-                    _context.Orders.Add(entity);
-                    await _context.SaveChangesAsync(cancellationToken);
-                }
+                _context.FoodDrinkOrders.Add(foodDrinkOrder);
 
-                var userData = await _context.Users
-                    .Where(x => x.Id == entity!.User_Id)
-                    .SingleOrDefaultAsync(cancellationToken);
+                _context.Carts.Remove(x);
+            });
 
-                var cartsData = await _context.Carts
-                    .Where(x => x.User_Id == userData!.Id)
-                    .Where(y => y.IsChecked == true)
-                    .ToListAsync(cancellationToken);
-                
+            // foreach (var item in cartsData)
+            // {
+            //     var orderData = new FoodDrinkOrder
+            //     {
+            //         Food_Drink_Id = item.Food_Drink_Id,
+            //         Order_Id = entity!.Id,
+            //         Quantity = item.Quantity,
+            //     };
 
-                foreach (var item in cartsData)
-                {
-                    var orderData = new FoodDrinkOrder
-                    {
-                        Food_Drink_Id = item.Food_Drink_Id,
-                        Order_Id = entity!.Id,
-                        Quantity = item.Quantity,
-                    };
+            //     _context.FoodDrinkOrders.Add(orderData);
+            //     await _context.SaveChangesAsync(cancellationToken);
+            // }
 
-                    _context.FoodDrinkOrders.Add(orderData);
-                    await _context.SaveChangesAsync(cancellationToken);
-                }
+            await _context.SaveChangesAsync(cancellationToken);
 
-
-                return new PostOrderVm
-                {
-                    Status = "Ok",
-                    OrdersData = new OrderVmDto
-                    {
-                        Order_Time = entity!.Order_Time,
-                        Meal_Date = entity!.Meal_Date,
-                        BankAccount_Id = entity.BankAccount_Id,
-                        Payment_Url = entity.Payment_Url,
-                        Address = entity.Address,
-                        User_Name = userData!.Name,
-                        Bank_Number = request.OrderData.Bank_Number,
-                    }
-                };
-            }
-            catch
+            return new PostOrderVm
             {
-                throw new NotFoundException("Token Tidak Ada Harap Login Kembali", HttpStatusCode.BadRequest);
-            }
+                Status = "Ok",
+                OrdersData = new OrderVmDto
+                {
+                    OrderTime = entity!.Order_Time,
+                    MealDate = entity!.Meal_Date,
+                    PaymentUrl = "Payment Url",
+                    Address = entity.Address,
+                    BankNumber = entity.Bank_Number,
+                }
+                // {
+                //     Order_Time = entity!.Order_Time,
+                //     Meal_Date = entity!.Meal_Date,
+                //     BankAccount_Id = entity.BankAccount_Id,
+                //     Payment_Url = entity.Payment_Url,
+                //     Address = entity.Address,
+                //     User_Name = userData!.Name,
+                //     Bank_Number = request.OrderData.Bank_Number,
+                // }
+            };
         }
     }
 }
