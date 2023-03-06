@@ -9,14 +9,14 @@ public interface IApplicationDbContext
 
     DbSet<TodoItem> TodoItems { get; }
 
-    DbSet<User> Users { get;}
+    DbSet<User> Users { get; }
 
     DbSet<BankAccount> BankAccounts { get; }
 
     DbSet<Cart> Carts { get; }
 
     DbSet<FoodDrinkMenu> FoodDrinkMenus { get; }
-    
+
     DbSet<FoodDrinkOrder> FoodDrinkOrders { get; }
 
     DbSet<JwtSettings> JwtSettings { get; }
