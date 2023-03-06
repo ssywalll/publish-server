@@ -9,7 +9,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using CleanArchitecture.Application.Common.Context;
 using CleanArchitecture.Application.Common.Exceptions;
-using System.Net;
 
 namespace CleanArchitecture.Application.Orders.Queries.GetOrders
 {
