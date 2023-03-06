@@ -54,6 +54,7 @@ namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
 
                 var entity = new Order
                 {
+                    Order_Time = DateTime.Now,
                     Meal_Date = request.OrderData!.Meal_Date,
                     Address = request.OrderData!.Address,
                     User_Id = userId,

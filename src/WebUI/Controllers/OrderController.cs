@@ -17,9 +17,9 @@ namespace WebUI.Controllers
     public class OrdersController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<OrderDto>> Handle(int id)
+        public async Task<ActionResult<OrderDto>> Get(int id)
         {
-            var vm = await Mediator.Send(new ExportOrdersQuery { Id = id });
+            var vm = await Mediator.Send(new GetOrdersQuery { Id = id });
             return Ok(vm);
         }
 
@@ -29,8 +29,21 @@ namespace WebUI.Controllers
             return await Mediator.Send(query);
         }
 
+        [HttpGet("Graph")]
+        public async Task<ActionResult<PaginatedList<ItemGraphDto>>> GetGraph([FromQuery] GetOrderGraph query)
+        {
+            return await Mediator.Send(query);
+        }
+
+        [HttpGet("DataGraph")]
+        public async Task<ActionResult<DataGraphVm>> GetDataGraph()
+        {
+            return await Mediator.Send(new GetDataGraph());
+        }
+
+
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var vm = await Mediator.Send(new ExportOrdersQuery { Id = id });
             return Ok(vm);
