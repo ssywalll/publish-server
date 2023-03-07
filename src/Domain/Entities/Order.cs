@@ -2,7 +2,7 @@ namespace CleanArchitecture.Domain.Entities
 {
     public class Order : BaseAuditableEntity
     {
-        public DateTime Order_Time { get; set; }
+        public DateTime Order_Time { get; set; } = DateTime.Now;
         public DateTime Meal_Date { get; set; }
         public Status Status { get; set; }
         public int BankAccount_Id { get; set; }

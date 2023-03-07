@@ -43,6 +43,8 @@ namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
                 .Where(x => x.UserId.Equals(tokenInfo.Owner_Id) && x.IsChoosen)
                 .SingleAsync(cancellationToken);
 
+            // var imageKit = request.GetImagekit();
+
             var entity = new Order
             {
                 Meal_Date = request.OrderData!.MealDate,
@@ -56,21 +58,20 @@ namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
                 throw new NotFoundException("Order gagal dibuat", HttpStatusCode.BadRequest);
 
             _context.Orders.Add(entity);
-            // await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
 
-            // var userData = await _context.Users
-            //     .Where(x => x.Id == entity!.User_Id)
-            //     .SingleOrDefaultAsync(cancellationToken);
+            // var requestedFile = new FileCreateRequest
+            // {
+            //     file = request.OrderData!.PaymentScreenshoot,
+            //     fileName = $"{entity.Id}-{entity.User_Id}-payment"
+            // };
+
+            // var uploadedFile = await imageKit.Path("/payment").UploadAsync(requestedFile);
 
             var cartUser = await _context.Carts
                 .Where(x => x.User_Id.Equals(tokenInfo.Owner_Id) && x.IsChecked)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
-
-            // var cartsData = await _context.Carts
-            //     .Where(x => x.User_Id == userData!.Id)
-            //     .Where(y => y.IsChecked == true)
-            //     .ToListAsync(cancellationToken);
 
             cartUser.ForEach(x =>
             {
@@ -86,41 +87,31 @@ namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
                 _context.Carts.Remove(x);
             });
 
-            // foreach (var item in cartsData)
-            // {
-            //     var orderData = new FoodDrinkOrder
-            //     {
-            //         Food_Drink_Id = item.Food_Drink_Id,
-            //         Order_Id = entity!.Id,
-            //         Quantity = item.Quantity,
-            //     };
+            // var order = await _context.Orders
+            //     .FindAsync(entity, cancellationToken);
 
-            //     _context.FoodDrinkOrders.Add(orderData);
-            //     await _context.SaveChangesAsync(cancellationToken);
-            // }
+            // order!.Payment_Url = uploadedFile.filePath;
 
             await _context.SaveChangesAsync(cancellationToken);
+
+            var orderData = new OrderVmDto
+            {
+                OrderTime = entity!.Order_Time,
+                MealDate = entity!.Meal_Date,
+                PaymentUrl = entity!.Payment_Url,
+                Address = entity.Address,
+                BankNumber = entity.Bank_Number,
+                UserName = await _context.Users
+                    .Where(x => x.Id.Equals(entity.User_Id))
+                    .AsNoTracking()
+                    .Select(y => y.Name)
+                    .SingleAsync(cancellationToken)
+            };
 
             return new PostOrderVm
             {
                 Status = "Ok",
-                OrdersData = new OrderVmDto
-                {
-                    OrderTime = entity!.Order_Time,
-                    MealDate = entity!.Meal_Date,
-                    PaymentUrl = "Payment Url",
-                    Address = entity.Address,
-                    BankNumber = entity.Bank_Number,
-                }
-                // {
-                //     Order_Time = entity!.Order_Time,
-                //     Meal_Date = entity!.Meal_Date,
-                //     BankAccount_Id = entity.BankAccount_Id,
-                //     Payment_Url = entity.Payment_Url,
-                //     Address = entity.Address,
-                //     User_Name = userData!.Name,
-                //     Bank_Number = request.OrderData.Bank_Number,
-                // }
+                OrdersData = orderData
             };
         }
     }

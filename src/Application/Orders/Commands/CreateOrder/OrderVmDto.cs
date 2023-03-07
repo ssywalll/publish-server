@@ -17,11 +17,5 @@ namespace CleanArchitecture.Application.Orders.Commands.CreateOrder
         public string PaymentUrl { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
-
-        public void Mapping(Profile profile)
-        {
-            profile.CreateMap<Order, OrderVmDto>()
-                .ForMember(d => d.UserName, opt => opt.MapFrom(s => s.users!.Name));
-        }
     }
 }
