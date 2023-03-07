@@ -41,6 +41,7 @@ namespace CleanArchitecture.Application.Users.Queries.GetUsers
 
             return await users
                     .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
+                    .OrderBy(x => x.Name)
                     .PaginatedListAsync(request.PageNumber, request.PageSize);
         }
     }

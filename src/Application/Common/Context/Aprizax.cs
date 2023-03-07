@@ -120,5 +120,18 @@ namespace CleanArchitecture.Application.Common.Context
             var format = new CultureInfo("id-ID");
             return date.ToString("dddd, dd MMMM yyyy", format);
         }
+
+        public static string? GetFormattedDateGraph(this DateTime date)
+        {
+            return date.ToString("yyyy-MM-dd");
+        }
+
+        public static string GetDataComparison(int dataComparison1, int dataComparison2, int dataMaks)
+        {
+            var data1 = dataComparison1 * dataComparison1 / dataMaks;
+            var data2 = dataComparison2 * dataComparison2 / dataMaks;
+            var entity = data1 - data2;
+            return Convert.ToString(entity + "%");
+        }
     }
 }
