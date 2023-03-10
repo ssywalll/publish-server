@@ -22,6 +22,11 @@ namespace WebUI.Controllers
             var vm = await Mediator.Send(new GetOrdersQuery { Id = id });
             return Ok(vm);
         }
+        [HttpGet("User")]
+        public async Task<ActionResult<OrderWithTokenVm>> GetUserOrder([FromQuery] GetOrderWithToken query)
+        {
+            return await Mediator.Send(query);
+        }
 
         [HttpGet("Switch")]
         public async Task<ActionResult<PaginatedList<OrderWaitingDto>>> Get([FromQuery] GetOrderWithPagination query)
@@ -53,10 +58,10 @@ namespace WebUI.Controllers
         public async Task<ActionResult<OrderDto>> GetToken([FromHeader(Name = "Authorization")] GetOrdersByToken query)
         {
             return await Mediator.Send(query);
-        } 
+        }
 
         [HttpPost]
-        public async Task<ActionResult<PostOrderVm>> Create(CreateOrderCommand command)
+        public async Task<ActionResult<PostOrderVm>> Create([FromForm] CreateOrderCommand command)
         {
             return await Mediator.Send(command);
         }

@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
 {
@@ -43,8 +44,6 @@ namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
                 .Where(x => x.UserId.Equals(tokenInfo.Owner_Id) && x.IsChoosen)
                 .SingleAsync(cancellationToken);
 
-            // var imageKit = request.GetImagekit();
-
             var entity = new Order
             {
                 Meal_Date = request.OrderData!.MealDate,
@@ -60,14 +59,6 @@ namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
             _context.Orders.Add(entity);
             await _context.SaveChangesAsync(cancellationToken);
 
-            // var requestedFile = new FileCreateRequest
-            // {
-            //     file = request.OrderData!.PaymentScreenshoot,
-            //     fileName = $"{entity.Id}-{entity.User_Id}-payment"
-            // };
-
-            // var uploadedFile = await imageKit.Path("/payment").UploadAsync(requestedFile);
-
             var cartUser = await _context.Carts
                 .Where(x => x.User_Id.Equals(tokenInfo.Owner_Id) && x.IsChecked)
                 .AsNoTracking()
@@ -78,7 +69,7 @@ namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
                 var foodDrinkOrder = new FoodDrinkOrder
                 {
                     Food_Drink_Id = x.Food_Drink_Id,
-                    Order_Id = entity!.Id,
+                    Order_Id = entity.Id,
                     Quantity = x.Quantity,
                 };
 
@@ -87,31 +78,28 @@ namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
                 _context.Carts.Remove(x);
             });
 
-            // var order = await _context.Orders
-            //     .FindAsync(entity, cancellationToken);
+            var createdOrder = await _context.Orders
+                .FindAsync(new object[] { entity.Id }, cancellationToken);
 
-            // order!.Payment_Url = uploadedFile.filePath;
+            var fileExtension = Path.GetExtension(request.OrderData.Payment!.FileName);
+            var dateName = entity.Order_Time!.ToString("yyyy-MM-dd");
+            var imageName = $"{entity.Id}-{entity.User_Id}-payment-{dateName}{fileExtension}";
+
+            var imageFullPath = imageName.GetFullPath("payment");
+
+            using (var stream = File.Create(imageFullPath))
+            {
+                await request.OrderData.Payment!.CopyToAsync(stream, cancellationToken);
+            }
+
+            createdOrder!.Payment_Url = Path.Combine("payment", imageName);
 
             await _context.SaveChangesAsync(cancellationToken);
-
-            var orderData = new OrderVmDto
-            {
-                OrderTime = entity!.Order_Time,
-                MealDate = entity!.Meal_Date,
-                PaymentUrl = entity!.Payment_Url,
-                Address = entity.Address,
-                BankNumber = entity.Bank_Number,
-                UserName = await _context.Users
-                    .Where(x => x.Id.Equals(entity.User_Id))
-                    .AsNoTracking()
-                    .Select(y => y.Name)
-                    .SingleAsync(cancellationToken)
-            };
 
             return new PostOrderVm
             {
                 Status = "Ok",
-                OrdersData = orderData
+                Data = entity.Id
             };
         }
     }

@@ -47,7 +47,7 @@ namespace CleanArchitecture.Application.BankAccounts.Commands.CreateBankAccount
                 BankNumber = request.BankNumber,
                 Name = request.Name.ToUpper(),
                 BankName = request.BankName.ToUpper(),
-                UserId = tokenInfo.Owner_Id ?? 0
+                UserId = tokenInfo.Owner_Id ?? 0,
             };
 
             _context.BankAccounts.Add(entity);

@@ -14,9 +14,11 @@ using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Enums;
 using CleanArchitecture.Domain.Common;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
 
 namespace CleanArchitecture.Application.Common.Context
 {
@@ -132,6 +134,13 @@ namespace CleanArchitecture.Application.Common.Context
             var data2 = dataComparison2 * dataComparison2 / dataMaks;
             var entity = data1 - data2;
             return Convert.ToString(entity + "%");
+        }
+
+        public static string GetFullPath(this string fileName, string folderName)
+        {
+            var rootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            return Path.Combine(rootPath!, "images", folderName, $"{fileName}");
         }
     }
 }

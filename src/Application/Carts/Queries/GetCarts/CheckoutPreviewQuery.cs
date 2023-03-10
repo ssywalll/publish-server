@@ -41,13 +41,17 @@ namespace CleanArchitecture.Application.Carts.Queries.GetCarts
                 throw new NotFoundException("Keranjang anda bermasalah", HttpStatusCode.BadRequest);
 
             if (carts.Count == 0)
-                throw new NotFoundException("Keranjang anda kosong", HttpStatusCode.BadRequest);
+                return new CheckoutPreviewVm
+                {
+                    Status = "Ok",
+                    Data = new CheckoutPreviewDto()
+                };
 
             var usedBank = await _context.BankAccounts
                 .Where(x => x.UserId.Equals(tokenInfo.Owner_Id) && x.IsChoosen)
                 .AsNoTracking()
                 .ProjectTo<CheckoutBankDto>(_mapper.ConfigurationProvider)
-                .SingleAsync(cancellationToken);
+                .SingleOrDefaultAsync(cancellationToken);
 
             var totalCartsPrice = await _context.Carts
                 .Where(x => x.IsChecked && x.User_Id.Equals(tokenInfo.Owner_Id))

@@ -12,8 +12,8 @@ namespace CleanArchitecture.Application.Carts.Queries.GetCarts
     public record CheckoutPreviewDto
     {
         public float TotalPrice { get; init; }
-        public CheckoutBankDto UsedBank { get; init; } = new CheckoutBankDto();
-        public IList<CheckoutCartDto> Carts { get; init; } = new List<CheckoutCartDto>();
+        public CheckoutBankDto? UsedBank { get; init; }
+        public IList<CheckoutCartDto>? Carts { get; init; }
     }
     public record CheckoutPreviewVm
     {

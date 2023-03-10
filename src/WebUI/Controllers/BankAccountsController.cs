@@ -38,6 +38,11 @@ namespace WebUI.Controllers
             var vm = await Mediator.Send(new ExportBankAccountsQuery { Id = Id });
             return Ok(vm);
         }
+        [HttpGet("UsedBank")]
+        public async Task<ActionResult<UsedBankVm>> GetUsedBank([FromQuery] GetUsedBankQuery query)
+        {
+            return await Mediator.Send(query);
+        }
 
         [HttpDelete]
         public async Task<ActionResult> Delete([FromQuery] DeleteBankAccountCommand command)
