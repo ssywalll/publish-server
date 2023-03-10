@@ -16,7 +16,8 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
 {
     public record GetOrderWithPagination : IRequest<PaginatedList<OrderWaitingDto>>
     {
-        public int SortBy { get; init; }
+        public string? SortBy { get; init; } = "Pesanan Terbaru";
+        public int Filter { get; init; }
         public int PageNumber { get; init; } = 1;
         public int PageSize { get; init; } = 10;
     }
@@ -36,7 +37,7 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
         {
             IQueryable<Order> orderData = _context.Orders;
 
-             switch (request.SortBy)
+            switch (request.Filter)
             {
                 case 0:
                     orderData = orderData.Where(x => x.Status == 0);
@@ -51,6 +52,26 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
                     orderData = orderData.Where(x => x.Status == Domain.Enums.Status.Successful);
                     break;
             }
+
+            switch (request.SortBy)
+            {
+                case "Semua":
+                    orderData = orderData.OrderBy(x => x.Id);
+                    break;
+                case "Pesanan Terbanyak":
+                    orderData = orderData.OrderByDescending(x => x.FoodDrinkOrders!.Sum(y => y.Quantity));
+                    break;
+                case "Pesanan Terdikit":
+                    orderData = orderData.OrderBy(x => x.FoodDrinkOrders!.Sum(y => y.Quantity));
+                    break;
+                case "Pesanan Terbaru":
+                    orderData = orderData.OrderByDescending(x => x.Order_Time);
+                    break;
+                case "Pesanan Terlama":
+                    orderData = orderData.OrderBy(x => x.Order_Time);
+                    break;
+            }
+
 
             return await orderData
                .ProjectTo<OrderWaitingDto>(_mapper.ConfigurationProvider)

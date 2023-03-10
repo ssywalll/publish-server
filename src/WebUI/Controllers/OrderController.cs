@@ -49,8 +49,15 @@ namespace WebUI.Controllers
             return Ok(vm);
         }
 
+        [HttpGet("UserId")]
+        public async Task<ActionResult<GetByTokenVm>> GetByUserId(int id)
+        {
+            var vm = await Mediator.Send(new GetOrderAdmin { Id = id });
+            return Ok(vm);
+        }
+
         [HttpGet("Token")]
-        public async Task<ActionResult<OrderDto>> GetToken([FromHeader(Name = "Authorization")] GetOrdersByToken query)
+        public async Task<ActionResult<GetByTokenVm>> GetToken([FromHeader(Name = "Authorization")] GetOrdersByToken query)
         {
             return await Mediator.Send(query);
         } 
