@@ -8,10 +8,11 @@ using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.WebUI.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using MediatR;
 using CleanArchitecture.Application.BankAccounts.Queries.ExportBankAccounts;
 using CleanArchitecture.Application.BankAccounts.Commands.DeleteBankAccount;
 using CleanArchitecture.Application.BankAccounts.Commands.UpdateBankAccount;
-using MediatR;
+using CleanArchitecture.Application.BankAccounts.Commands.ChooseBankAccount;
 
 namespace WebUI.Controllers
 {
@@ -37,6 +38,11 @@ namespace WebUI.Controllers
             var vm = await Mediator.Send(new ExportBankAccountsQuery { Id = Id });
             return Ok(vm);
         }
+        [HttpGet("UsedBank")]
+        public async Task<ActionResult<UsedBankVm>> GetUsedBank([FromQuery] GetUsedBankQuery query)
+        {
+            return await Mediator.Send(query);
+        }
 
         [HttpDelete]
         public async Task<ActionResult> Delete([FromQuery] DeleteBankAccountCommand command)
@@ -48,6 +54,14 @@ namespace WebUI.Controllers
 
         [HttpPut]
         public async Task<ActionResult> Update(UpdateBankAccountCommand command)
+        {
+            await Mediator.Send(command);
+
+            return Ok();
+        }
+
+        [HttpPut("Choose")]
+        public async Task<ActionResult> Choose([FromQuery] ChooseBankAccountCommand command)
         {
             await Mediator.Send(command);
 
