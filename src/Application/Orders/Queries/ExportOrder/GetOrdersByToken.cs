@@ -17,13 +17,13 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace CleanArchitecture.Application.Orders.Queries.ExportOrder
 {
-    public record GetOrdersByToken : IRequest<OrderDto>
+    public record GetOrdersByToken : IRequest<GetByTokenVm>
     {
         [FromHeader(Name = "Authorization")]
         public string? Token { get; init; }
     }
 
-    public class GetOrdersByTokenHandler : IRequestHandler<GetOrdersByToken, OrderDto>
+    public class GetOrdersByTokenHandler : IRequestHandler<GetOrdersByToken, GetByTokenVm>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -34,7 +34,7 @@ namespace CleanArchitecture.Application.Orders.Queries.ExportOrder
             _mapper = mapper;
         }
 
-        public async Task<OrderDto> Handle(GetOrdersByToken request, CancellationToken cancellationToken)
+        public async Task<GetByTokenVm> Handle(GetOrdersByToken request, CancellationToken cancellationToken)
         {
             if (request == null)
                 return null!;
@@ -63,11 +63,31 @@ namespace CleanArchitecture.Application.Orders.Queries.ExportOrder
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var user = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
-                return await _context.Orders
+                var data = await _context.Orders
                     .Where(x => x.User_Id == user)
                     .AsNoTracking()
-                    .ProjectTo<OrderDto>(_mapper.ConfigurationProvider)
-                    .SingleAsync(cancellationToken);
+                    .ProjectTo<GetByTokenDto>(_mapper.ConfigurationProvider)
+                    .ToListAsync(cancellationToken);
+
+                var dataOrderUser = await _context.Orders
+                    .Where(x => x.User_Id == user)
+                    .ToListAsync(cancellationToken);
+
+                var totalPriceOrdered = await _context.Orders
+                    .Where(x => x.User_Id == user)
+                    .SumAsync(y => y.FoodDrinkOrders!.Sum(z => z.FoodDrinkMenus!.Price));
+                    
+
+                return new GetByTokenVm
+                {
+                    Status = "Ok",
+                    Data = new GetTotalOrder
+                    {
+                        TotalOrdered = dataOrderUser.Count(),
+                        TotalPriceOrdered = totalPriceOrdered,
+                        ListData = data
+                    }
+                };
 
             }
             catch

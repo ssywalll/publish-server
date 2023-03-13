@@ -128,12 +128,12 @@ namespace CleanArchitecture.Application.Common.Context
             return date.ToString("yyyy-MM-dd");
         }
 
-        public static string GetDataComparison(int dataComparison1, int dataComparison2, int dataMaks)
+        public static int GetDataComparison(int dataComparison1, int dataComparison2, int dataMaks)
         {
             var data1 = dataComparison1 * dataComparison1 / dataMaks;
             var data2 = dataComparison2 * dataComparison2 / dataMaks;
             var entity = data1 - data2;
-            return Convert.ToString(entity + "%");
+            return entity - 1;
         }
 
         public static string GetFullPath(this string fileName, string folderName)

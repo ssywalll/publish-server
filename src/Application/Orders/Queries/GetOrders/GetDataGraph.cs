@@ -28,6 +28,7 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
         public async Task<DataGraphVm> Handle(GetDataGraph request, CancellationToken cancellationToken)
         {
             var entity = await _context.FoodDrinkOrders
+                .Where(x => x.Orders!.Status.Equals(Domain.Enums.Status.Successful))
                 .SumAsync(x => x.Quantity * x.FoodDrinkMenus!.Price);
 
             var order = await _context.FoodDrinkOrders
@@ -39,27 +40,6 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
                 .ProjectTo<DataGraphDto2>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 
-            var dataIncomeOrder = await _context.Orders
-                .AsNoTracking()
-                .ProjectTo<DataGraphDto>(_mapper.ConfigurationProvider)
-                .Select(x => x.TotalOrder)
-                .ToListAsync(cancellationToken);
-
-            var dataNow = await _context.Orders
-                .Where(x => x.Order_Time.Date == DateTime.Now.Date)
-                .AsNoTracking()
-                .ProjectTo<DataGraphDto>(_mapper.ConfigurationProvider)
-                .Select(x => x.TotalOrder)
-                .ToListAsync(cancellationToken);
-
-            List<int> AuthorList = new List<int>();
-
-            var total = dataNow.Sum(x => Convert.ToInt32(x));
-            AuthorList.Add(total);
-
-
-            List<int> reverse = Enumerable.Reverse(AuthorList).ToList();
-
             var dataOrderTime = await _context.Orders
                 .AsNoTracking()
                 .OrderBy(w => w.Id)
@@ -67,7 +47,16 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
                 .Select(x => x.OrderTime)
                 .ToListAsync(cancellationToken);
 
-            var dataComparison = Aprizax.GetDataComparison(dataIncomeOrder.Last(), dataIncomeOrder.Last() - 1, order);
+            var dataTotalOrder = await _context.Orders
+                .AsNoTracking()
+                .GroupBy(y => y.Order_Time.Date)
+                .OrderBy(y => y.Key)
+                .Select(z => z.Sum(a => a.FoodDrinkOrders!.Sum(t => t.Quantity)))
+                .ToListAsync(cancellationToken);
+
+            // var dataComparison = Aprizax.GetDataComparison(dataTotalOrder.Last(), dataTotalOrder.Last() -1, order);
+            var dataComparison = Aprizax.GetDataComparison(dataTotalOrder.Last(), dataTotalOrder.LastIndexOf(dataTotalOrder.Last() -1), order);
+            // var dataComparison = Aprizax.GetDataComparison(57,5, order);
 
             return new DataGraphVm
             {
@@ -77,7 +66,7 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
                     TotalIncome = entity,
                     TotalOrdered = order,
                     DataComparison = dataComparison,
-                    DataTotalOrder = reverse,
+                    DataTotalOrder = dataTotalOrder,
                     DataOrderTime = dataOrderTime.Distinct().ToList(),
                     DataGraph = dataGraph
                 }

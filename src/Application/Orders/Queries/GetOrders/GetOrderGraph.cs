@@ -32,7 +32,7 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
         {
             return await _context.Orders
                 .Where(x => x.Status == Domain.Enums.Status.Successful)
-                .OrderBy(x => x.Order_Time == DateTime.Now)
+                .OrderByDescending(x => x.Id )
                 .ProjectTo<ItemGraphDto>(_mapper.ConfigurationProvider)
                 .PaginatedListAsync(request.PageNumber, request.PageSize);
         }
