@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Infrastructure.Persistence;
@@ -9,6 +10,30 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Storage Folder
+var rootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+var imagePath = Path.Combine(rootPath!, "images");
+
+var isPathNotExist = Directory.Exists(imagePath) is false;
+
+if (isPathNotExist)
+    Directory.CreateDirectory(imagePath);
+
+var images = new List<string> {
+    "payment",
+    "user",
+    "menu"
+};
+
+images.ForEach(x =>
+{
+    var path = Path.Combine(imagePath, x);
+    var isPathNotExist = Directory.Exists(path) is false;
+    if (isPathNotExist)
+        Directory.CreateDirectory(path);
+});
 
 //add any method
 builder.Services.AddCors(options =>

@@ -35,7 +35,7 @@ namespace CleanArchitecture.Application.BankAccounts.Commands.CreateBankAccount
                 throw new NotFoundException("Token tidak ditemukan", HttpStatusCode.BadRequest);
 
             var bankCount = await _context.BankAccounts
-                    .Where(x => x.User_Id.Equals(tokenInfo.Owner_Id))
+                    .Where(x => x.UserId.Equals(tokenInfo.Owner_Id))
                     .AsNoTracking()
                     .CountAsync(cancellationToken);
 
@@ -44,10 +44,10 @@ namespace CleanArchitecture.Application.BankAccounts.Commands.CreateBankAccount
 
             var entity = new BankAccount
             {
-                Bank_Number = request.BankNumber,
+                BankNumber = request.BankNumber,
                 Name = request.Name.ToUpper(),
-                Bank_Name = request.BankName.ToUpper(),
-                User_Id = tokenInfo.Owner_Id ?? 0
+                BankName = request.BankName.ToUpper(),
+                UserId = tokenInfo.Owner_Id ?? 0,
             };
 
             _context.BankAccounts.Add(entity);

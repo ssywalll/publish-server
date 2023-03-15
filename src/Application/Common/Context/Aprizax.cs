@@ -14,9 +14,11 @@ using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Enums;
 using CleanArchitecture.Domain.Common;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
 
 namespace CleanArchitecture.Application.Common.Context
 {
@@ -119,6 +121,26 @@ namespace CleanArchitecture.Application.Common.Context
         {
             var format = new CultureInfo("id-ID");
             return date.ToString("dddd, dd MMMM yyyy", format);
+        }
+
+        public static string? GetFormattedDateGraph(this DateTime date)
+        {
+            return date.ToString("yyyy-MM-dd");
+        }
+
+        public static int GetDataComparison(int dataComparison1, int dataComparison2, int dataMaks)
+        {
+            var data1 = dataComparison1 * dataComparison1 / dataMaks;
+            var data2 = dataComparison2 * dataComparison2 / dataMaks;
+            var entity = data1 - data2;
+            return entity - 1;
+        }
+
+        public static string GetFullPath(this string fileName, string folderName)
+        {
+            var rootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            return Path.Combine(rootPath!, "images", folderName, $"{fileName}");
         }
     }
 }

@@ -21,6 +21,7 @@ namespace CleanArchitecture.Application.Users.Queries.GetUsers
         public string Picture_Url { get; set; } = string.Empty;
         public int Quantity { get; set; }
         public float TotalPriceOrdered { get; set; }
+        public List<BankAccount> BankAccounts { get; set; }
 
          public void Mapping(Profile profile)
         {

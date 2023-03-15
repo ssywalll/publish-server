@@ -4,27 +4,25 @@ using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Context;
 using AutoMapper;
 using System.Net;
+using Microsoft.EntityFrameworkCore;
 
-namespace CleanArchitecture.Application.BankAccounts.Commands.UpdateBankAccount
+namespace CleanArchitecture.Application.BankAccounts.Commands.ChooseBankAccount
 {
-    public record UpdateBankAccountCommand : UseAprizax, IRequest
+    public record ChooseBankAccountCommand : UseAprizax, IRequest
     {
         public int Id { get; init; }
-        public string BankNumber { get; init; } = string.Empty;
-        public string Name { get; init; } = string.Empty;
-        public string BankName { get; init; } = string.Empty;
     }
 
-    public class UpdateBankAccountCommandHandler : IRequestHandler<UpdateBankAccountCommand>
+    public class ChooseBankAccountCommandHandler : IRequestHandler<ChooseBankAccountCommand>
     {
         private readonly IApplicationDbContext _context;
         private IMapper _mapper;
-        public UpdateBankAccountCommandHandler(IApplicationDbContext context, IMapper mapper)
+        public ChooseBankAccountCommandHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
-        public async Task<Unit> Handle(UpdateBankAccountCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(ChooseBankAccountCommand request, CancellationToken cancellationToken)
         {
 
             if (request is null)
@@ -44,9 +42,12 @@ namespace CleanArchitecture.Application.BankAccounts.Commands.UpdateBankAccount
             if (entity.UserId.Equals(tokenInfo.Owner_Id) is false)
                 throw new NotFoundException("Bank ini bukan milik anda", HttpStatusCode.BadRequest);
 
-            entity.BankNumber = request.BankNumber;
-            entity.Name = request.Name.ToUpper();
-            entity.BankName = request.BankName.ToUpper();
+            await _context.BankAccounts
+                .Where(x => x.UserId.Equals(tokenInfo.Owner_Id))
+                .ForEachAsync(y =>
+                {
+                    y.IsChoosen = y.Id.Equals(request.Id) ? true : false;
+                }, cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);
 

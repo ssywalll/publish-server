@@ -11,12 +11,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.Users.Queries.ExportUsers
 {
-    public record ExportUsersQuery : IRequest<UsersVm>
+    public record ExportUsersQuery : IRequest<UserDto>
     {
         public int Id { get; init; }
     }
 
-    public class ExportUsersQueryHandler : IRequestHandler<ExportUsersQuery, UsersVm>
+    public class ExportUsersQueryHandler : IRequestHandler<ExportUsersQuery, UserDto>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -27,16 +27,13 @@ namespace CleanArchitecture.Application.Users.Queries.ExportUsers
             _mapper = mapper;
         }
 
-        public async Task<UsersVm> Handle(ExportUsersQuery request, CancellationToken cancellationToken)
+        public async Task<UserDto> Handle(ExportUsersQuery request, CancellationToken cancellationToken)
         {
-            return new UsersVm
-            {
-                Data = await _context.Users
-                    .Where(x => x.Id == request.Id)
-                    .AsNoTracking()
-                    .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken)
-            };
+            return await _context.Users
+                .Where(x => x.Id == request.Id)
+                .AsNoTracking()
+                .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
+                .SingleAsync(cancellationToken);
         }
     }
 }

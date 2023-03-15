@@ -30,7 +30,7 @@ namespace WebUI.Controllers
             return await Mediator.Send(query);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("userId")]
         public async Task<IActionResult> Get(int id)
         {
             var vm = await Mediator.Send(new ExportUsersQuery { Id = id });

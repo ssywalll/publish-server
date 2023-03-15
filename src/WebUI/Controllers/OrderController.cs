@@ -17,10 +17,15 @@ namespace WebUI.Controllers
     public class OrdersController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<OrderDto>> Handle(int id)
+        public async Task<ActionResult<OrderDto>> Get(int id)
         {
-            var vm = await Mediator.Send(new ExportOrdersQuery { Id = id });
+            var vm = await Mediator.Send(new GetOrdersQuery { Id = id });
             return Ok(vm);
+        }
+        [HttpGet("User")]
+        public async Task<ActionResult<OrderWithTokenVm>> GetUserOrder([FromQuery] GetOrderWithToken query)
+        {
+            return await Mediator.Send(query);
         }
 
         [HttpGet("Switch")]
@@ -29,21 +34,41 @@ namespace WebUI.Controllers
             return await Mediator.Send(query);
         }
 
+        [HttpGet("Graph")]
+        public async Task<ActionResult<PaginatedList<ItemGraphDto>>> GetGraph([FromQuery] GetOrderGraph query)
+        {
+            return await Mediator.Send(query);
+        }
+
+        [HttpGet("DataGraph")]
+        public async Task<ActionResult<DataGraphVm>> GetDataGraph()
+        {
+            return await Mediator.Send(new GetDataGraph());
+        }
+
+
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var vm = await Mediator.Send(new ExportOrdersQuery { Id = id });
             return Ok(vm);
         }
 
+        [HttpGet("UserId")]
+        public async Task<ActionResult<GetByTokenVm>> GetByUserId(int id)
+        {
+            var vm = await Mediator.Send(new GetOrderAdmin { Id = id });
+            return Ok(vm);
+        }
+
         [HttpGet("Token")]
-        public async Task<ActionResult<OrderDto>> GetToken([FromHeader(Name = "Authorization")] GetOrdersByToken query)
+        public async Task<ActionResult<GetByTokenVm>> GetToken([FromHeader(Name = "Authorization")] GetOrdersByToken query)
         {
             return await Mediator.Send(query);
-        } 
+        }
 
         [HttpPost]
-        public async Task<ActionResult<PostOrderVm>> Create(CreateOrderCommand command)
+        public async Task<ActionResult<PostOrderVm>> Create([FromForm] CreateOrderCommand command)
         {
             return await Mediator.Send(command);
         }

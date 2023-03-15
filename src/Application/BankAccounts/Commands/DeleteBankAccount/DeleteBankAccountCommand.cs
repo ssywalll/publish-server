@@ -36,7 +36,7 @@ namespace CleanArchitecture.Application.BankAccounts.Commands.DeleteBankAccount
             if (entity is null)
                 throw new NotFoundException("Bank tidak ditemukan", HttpStatusCode.BadRequest);
 
-            if (entity.User_Id.Equals(tokenInfo.Owner_Id) is false)
+            if (entity.UserId.Equals(tokenInfo.Owner_Id) is false)
                 throw new NotFoundException("Bank ini bukan milik anda", HttpStatusCode.BadRequest);
 
             _context.BankAccounts.Remove(entity);

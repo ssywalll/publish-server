@@ -33,7 +33,7 @@ namespace CleanArchitecture.Application.BankAccounts.Queries.GetBankAccounts
                 throw new NotFoundException("Token tidak ditemukan", HttpStatusCode.BadRequest);
 
             var bankCount = await _context.BankAccounts
-                    .Where(x => x.User_Id.Equals(tokenInfo.Owner_Id))
+                    .Where(x => x.UserId.Equals(tokenInfo.Owner_Id))
                     .AsNoTracking()
                     .CountAsync(cancellationToken);
 
@@ -42,7 +42,7 @@ namespace CleanArchitecture.Application.BankAccounts.Queries.GetBankAccounts
                 Status = "Ok",
                 IsLimit = bankCount >= 2,
                 Data = await _context.BankAccounts
-                    .Where(x => x.User_Id.Equals(tokenInfo.Owner_Id))
+                    .Where(x => x.UserId.Equals(tokenInfo.Owner_Id))
                     .AsNoTracking()
                     .ProjectTo<BankAccountDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken)
