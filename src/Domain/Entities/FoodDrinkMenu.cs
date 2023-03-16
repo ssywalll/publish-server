@@ -7,7 +7,7 @@ namespace CleanArchitecture.Domain.Entities
         public int Min_Order { get; set; }
         public string Description { get; set; } = string.Empty;
         public string Image_Url { get; set; } = string.Empty;
-        public FoodDrink FoodDrink { get; set; }
+        public FoodDrink_type FoodDrink_Type { get; set; }
         public List<Cart>? Carts { get; set; }
         public List<Review>? Reviews { get; set; }
         public List<Tag>? Tags { get; set; }
