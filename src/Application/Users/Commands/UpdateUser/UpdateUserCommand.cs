@@ -17,7 +17,7 @@ namespace CleanArchitecture.Application.Users.Commands.UpdateUser
         public IFormFile? Avatar { get; init; }
         public string Name { get; init; } = string.Empty;
         public string Email { get; init; } = string.Empty;
-        public int Phone { get; init; }
+        public string Phone { get; init; } = string.Empty;
     }
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, UserDto>
     {

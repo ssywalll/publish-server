@@ -18,7 +18,7 @@ namespace CleanArchitecture.Application.Users.Queries.GetUsers
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
         public string Role { get; set; } = "user";
-        public int Phone { get; set; }
+        public string Phone { get; set; } = string.Empty;
         public Gender Gender { get; set; }
         public string Avatar { get; set; } = string.Empty;
         public int Quantity { get; set; }
