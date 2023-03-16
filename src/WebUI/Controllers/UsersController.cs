@@ -62,11 +62,9 @@ namespace WebUI.Controllers
             return await Mediator.Send(command);
         }
         [HttpPut]
-        public async Task<ActionResult> Update(UpdateUserCommand command)
+        public async Task<ActionResult<UserDto>> Update([FromForm] UpdateUserCommand command)
         {
-            await Mediator.Send(command);
-
-            return NoContent();
+            return await Mediator.Send(command);
         }
 
         [HttpDelete("{id}")]
