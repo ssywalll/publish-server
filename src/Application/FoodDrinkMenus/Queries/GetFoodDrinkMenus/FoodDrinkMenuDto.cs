@@ -16,7 +16,7 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.GetFoodDrinkMenus
         public int Min_Order { get; set; }
         public string Description { get; set; } = string.Empty;
         public string Image_Url { get; set; } = string.Empty;
-        public FoodDrink_type FoodDrink_Type { get; set; }
+        public type Type { get; set; }
 
     }
 }
