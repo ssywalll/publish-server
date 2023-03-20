@@ -143,5 +143,12 @@ namespace CleanArchitecture.Application.Common.Context
 
             return Path.Combine(rootPath!, "images", folderName, $"{fileName}");
         }
+
+        public static string GetFullPath(this string filePath)
+        {
+            var rootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            return Path.Combine(rootPath!, "images", filePath);
+        }
     }
 }
