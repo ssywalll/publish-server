@@ -25,6 +25,12 @@ namespace WebUI.Controllers
             return await Mediator.Send(query);
         }
 
+        [HttpGet("CurrentTotal")]
+        public async Task<ActionResult<GetFoodDrinkQuantityVm>> Get([FromQuery] GetFoodDrinkQuantity query)
+        {
+            return await Mediator.Send(query);
+        }
+
 
         [HttpGet("{id}/detail")]
         public async Task<IActionResult> Get(int id)

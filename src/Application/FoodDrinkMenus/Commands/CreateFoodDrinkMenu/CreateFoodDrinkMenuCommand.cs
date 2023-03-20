@@ -20,15 +20,16 @@ using System.Security.Claims;
 
 namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.CreateFoodDrinkMenu
 {
-    public record CreateFoodDrinkMenuCommand : UseAprizax, IRequest<FoodDrinkMenu>
+    public record CreateFoodDrinkMenuCommand : IRequest<FoodDrinkMenu>
     {
         public string Name { get; init; } = string.Empty;
         public float Price { get; init; }
         public int Min_Order { get; init; }
         public string Description { get; init; } = string.Empty;
         public string Image_Url { get; init; } = string.Empty;
-        public string Token { get; init; } = string.Empty;
+        public type Type { get; init; }
     }
+
     public class CreateFoodDrinkMenuCommandHandler : IRequestHandler<CreateFoodDrinkMenuCommand, FoodDrinkMenu>
     {
         private readonly IApplicationDbContext _context;
@@ -40,60 +41,20 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.CreateFoodDrinkM
 
         public async Task<FoodDrinkMenu> Handle(CreateFoodDrinkMenuCommand request, CancellationToken cancellationToken)
         {
-            if (request.Token == null)
-                throw new NotFoundException("Token Tidak Ada Harap Login Kembali", HttpStatusCode.BadRequest);
-
-            var key = Encoding.UTF8.GetBytes("v8y/B?E(H+MbQeThWmZq3t6w9z$C&F)J@NcRfUjXn2r5u7x!A%D*G-KaPdSgVkYp");
-            var secretKey = new SymmetricSecurityKey(key);
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var validationParameters = new TokenValidationParameters
+            var entity = new FoodDrinkMenu
             {
-                ValidateIssuerSigningKey = true,
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                IssuerSigningKey = secretKey,
-                ClockSkew = TimeSpan.Zero
+                Name = request.Name,
+                Price = request.Price,
+                Min_Order = request.Min_Order,
+                Description = request.Description,
+                Image_Url = request.Image_Url,
+                Type = request.Type,
             };
 
-            try
-            {
-                tokenHandler.ValidateToken
-                (request.Token, validationParameters, out SecurityToken validatedToken);
-                var jwtToken = (JwtSecurityToken)validatedToken;
-                var user_Id = jwtToken.Claims.First(x => x.Type == "id").Value;
-                var Roles = jwtToken.Claims.First(x => ClaimsIdentity.DefaultRoleClaimType == "Role").Value;
-
-                if (Roles == "admin")
-                {
-                    var entity = new FoodDrinkMenu
-                    {
-                        Name = request.Name,
-                        Price = request.Price,
-                        Min_Order = request.Min_Order,
-                        Description = request.Description,
-                        Image_Url = request.Image_Url,
-                    };
-
-                    return await Aprizax.Insert<FoodDrinkMenu>
-                    (_context, _context.FoodDrinkMenus, entity, cancellationToken);
-
-                }
-                return Unauthorized("You don't have to correct permissons to do this.");
-            }
-            catch
-            {
-                throw new NotFoundException("Token Tidak Ada Harap Login Kembali", HttpStatusCode.BadRequest);
-            }
-
-
-
-
-            //konteks, tabel konteks, record baru, cancelationToken
+            return await Aprizax.Insert<FoodDrinkMenu>
+            (_context, _context.FoodDrinkMenus, entity, cancellationToken);
         }
 
-        private FoodDrinkMenu Unauthorized(string v)
-        {
-            throw new NotImplementedException();
-        }
+        //konteks, tabel konteks, record baru, cancelationToken
     }
 }

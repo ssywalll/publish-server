@@ -1,7 +1,7 @@
 namespace CleanArchitecture.Domain.Enums
 {
 
-    public enum FoodDrink
+    public enum type
     {
         Food,
         Drink
