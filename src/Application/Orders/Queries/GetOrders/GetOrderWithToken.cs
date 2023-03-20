@@ -40,16 +40,19 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
                 .Select(y => y.User_Id)
                 .SingleOrDefaultAsync(cancellationToken);
 
+            if (orderOwnerId is 0)
+                throw new NotFoundException("Order tidak ditemukan", HttpStatusCode.BadRequest);
+
             var isNotValidOwner = orderOwnerId.Equals(tokenInfo.Owner_Id) is false;
 
             if (isNotValidOwner)
                 throw new NotFoundException("Order ini bukan milik anda", HttpStatusCode.BadRequest);
 
             var order = await _context.Orders
-                .Where(x => x.Id.Equals(request.OrderId))
+                .Where(x => x.Id == request.OrderId)
                 .AsNoTracking()
                 .ProjectTo<OrderWithTokenDto>(_mapper.ConfigurationProvider)
-                .SingleOrDefaultAsync(cancellationToken);
+                .SingleAsync(cancellationToken);
 
             return new OrderWithTokenVm
             {
