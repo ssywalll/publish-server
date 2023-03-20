@@ -130,10 +130,11 @@ namespace CleanArchitecture.Application.Common.Context
 
         public static int GetDataComparison(int dataComparison1, int dataComparison2, int dataMaks)
         {
+        
             var dataPernilai = dataMaks / 2;
-            var data1 = dataComparison1 * dataPernilai / dataMaks;
-            var data2 = dataComparison2 * dataPernilai / dataMaks;
-            var entity = data1 - data2;
+            var data1 = dataComparison1 == 0 ? 0 : dataComparison1 * dataPernilai / dataMaks;
+            var data2 = dataComparison2 == 0 ? 0 : dataComparison2 * dataPernilai / dataMaks;
+            var entity = data1 == 0 && data2 == 0 ? 0 : data1 - data2;
             return entity;
         }
 
