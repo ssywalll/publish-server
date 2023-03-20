@@ -61,6 +61,12 @@ namespace CleanArchitecture.Application.Users.Commands.UpdateUser
                     .SingleAsync(cancellationToken);
             }
 
+            if (request.Avatar.ImageValidate() is false)
+                throw new NotFoundException("Ekstensi berkas bukan merupkan ekstensi gambar yang diperbolehkan", HttpStatusCode.BadRequest);
+
+            if (request.Avatar.SizeValidate() is false)
+                throw new NotFoundException("Ukuran berkas melebihi 2MB", HttpStatusCode.BadRequest);
+
             var dateName = DateTime.Now.ToString("yyyy-MM-dd");
             var fileExtension = Path.GetExtension(request.Avatar!.FileName);
             var fileName = $"{entity.Id}-avatar-{dateName}{fileExtension}";
