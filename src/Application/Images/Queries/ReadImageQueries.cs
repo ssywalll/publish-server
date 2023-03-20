@@ -12,6 +12,7 @@ using System.IO;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
 using System.Web;
+using System.Text.RegularExpressions;
 
 namespace CleanArchitecture.Application.Images
 {

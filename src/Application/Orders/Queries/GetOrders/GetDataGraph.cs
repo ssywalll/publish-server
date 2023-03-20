@@ -36,6 +36,7 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
                 .SumAsync(x => x.Quantity);
 
             var dataGraph = await _context.Orders
+                .Where(x => x.Status.Equals(Domain.Enums.Status.Successful))
                 .AsNoTracking()
                 .ProjectTo<DataGraphDto2>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
@@ -53,10 +54,10 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
                 .OrderBy(y => y.Key)
                 .Select(z => z.Sum(a => a.FoodDrinkOrders!.Sum(t => t.Quantity)))
                 .ToListAsync(cancellationToken);
-
-            // var dataComparison = Aprizax.GetDataComparison(dataTotalOrder.Last(), dataTotalOrder.Last() -1, order);
-            var dataComparison = Aprizax.GetDataComparison(dataTotalOrder.Last(), dataTotalOrder.LastIndexOf(dataTotalOrder.Last() -1), order);
-            // var dataComparison = Aprizax.GetDataComparison(57,5, order);
+             
+            var data1 = dataTotalOrder.Any() ? dataTotalOrder.Last() : 0 ;
+            var data2 =  dataTotalOrder.Count() >= 2 ? dataTotalOrder[^2] : 0 ;
+            var dataComparison = Aprizax.GetDataComparison(data1, data2, order);
 
             return new DataGraphVm
             {

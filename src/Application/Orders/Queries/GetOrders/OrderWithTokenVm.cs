@@ -16,15 +16,21 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders;
 public record FoodDrinkOrderDto : IMapFrom<FoodDrinkOrder>
 {
     public int Id { get; init; }
+    public int FoodDrinkId { get; set; }
     public string Name { get; init; } = string.Empty;
     public int Quantity { get; init; }
     public float Price { get; init; }
     public float TotalPrice { get; init; }
+    public int ReactionId { get; set; }
+    public Reaction? Reaction { get; set; } 
     public void Mapping(Profile profile)
     {
         profile.CreateMap<FoodDrinkOrder, FoodDrinkOrderDto>()
             .ForMember(d => d.Name, opt => opt.MapFrom(s => s.FoodDrinkMenus!.Name))
+            .ForMember(d => d.FoodDrinkId, opt => opt.MapFrom(s => s.FoodDrinkMenus!.Id))
             .ForMember(d => d.Price, opt => opt.MapFrom(s => s.FoodDrinkMenus!.Price))
+            .ForMember(d => d.Reaction, opt => opt.MapFrom(s => s.FoodDrinkMenus!.Reviews!.Single().Reaction))
+            .ForMember(d => d.ReactionId, opt => opt.MapFrom(s => s.FoodDrinkMenus!.Reviews!.Single().Id))
             .ForMember(d => d.TotalPrice, opt => opt.MapFrom(s => s.Quantity * s.FoodDrinkMenus!.Price));
     }
 }

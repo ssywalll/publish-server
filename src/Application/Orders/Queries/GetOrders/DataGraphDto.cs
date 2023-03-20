@@ -11,9 +11,7 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
 {
     public class DataGraphDto : IMapFrom<Order>
     {
-        // public float IncomeOrder { get; set; }
         public int TotalOrder { get; set; }
-        // public int IncomeComparison { get; set; }
         public string? OrderTime { get; set; }
 
         public void Mapping(Profile profile)

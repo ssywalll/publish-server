@@ -53,13 +53,9 @@ namespace WebUI.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, UpdateReviewsCommand command)
+        [HttpPut]
+        public async Task<ActionResult> Update(UpdateReviewsCommand command)
         {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
             await Mediator.Send(command);
             return Ok();
         }

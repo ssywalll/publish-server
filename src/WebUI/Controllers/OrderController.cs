@@ -34,6 +34,12 @@ namespace WebUI.Controllers
             return await Mediator.Send(query);
         }
 
+        [HttpGet("Switch/User")]
+        public async Task<ActionResult<PaginatedList<OrderWaitingDto>>> GetOrderUser([FromQuery] GetOrderUser query)
+        {
+            return await Mediator.Send(query);
+        }
+
         [HttpGet("Graph")]
         public async Task<ActionResult<PaginatedList<ItemGraphDto>>> GetGraph([FromQuery] GetOrderGraph query)
         {

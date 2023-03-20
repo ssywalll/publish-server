@@ -30,16 +30,19 @@ namespace CleanArchitecture.Application.Orders.Queries.ExportOrder
 
                 var data = await _context.Orders
                     .Where(x => x.User_Id == request.Id)
+                    .Where(x => x.Status.Equals(Domain.Enums.Status.Successful))
                     .AsNoTracking()
                     .ProjectTo<GetByTokenDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken);
 
                 var dataOrderUser = await _context.Orders
                     .Where(x => x.User_Id == request.Id)
+                    .Where(x => x.Status.Equals(Domain.Enums.Status.Successful))
                     .ToListAsync(cancellationToken);
 
                 var totalPriceOrdered = await _context.Orders
                     .Where(x => x.User_Id == request.Id)
+                    .Where(x => x.Status.Equals(Domain.Enums.Status.Successful))
                     .SumAsync(y => y.FoodDrinkOrders!.Sum(z => z.FoodDrinkMenus!.Price * z.Quantity));
 
 

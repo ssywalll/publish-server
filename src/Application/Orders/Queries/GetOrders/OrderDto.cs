@@ -30,6 +30,7 @@ namespace CleanArchitecture.Application.Orders.Queries.GetOrders
                 .ForMember(d => d.BankNumber, opt => opt.MapFrom(s => s.BankAccounts!.BankNumber))
                 .ForMember(d => d.OrderTime, opt => opt.MapFrom(s => s.Order_Time.GetFormattedDate()))
                 .ForMember(d => d.MealDate, opt => opt.MapFrom(s => s.Meal_Date.GetFormattedDate()))
+                .ForMember(d => d.PaymentUrl, opt => opt.MapFrom(s => s.Payment_Url))
                 .ForMember(d => d.TotalPriceOrdered, opt => opt.MapFrom(s => s.FoodDrinkOrders!.Sum(t => t.Quantity * t.FoodDrinkMenus!.Price)));
         }
     }

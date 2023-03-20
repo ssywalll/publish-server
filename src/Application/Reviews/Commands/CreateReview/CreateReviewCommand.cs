@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CleanArchitecture.Application.Common.Context;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Enums;
@@ -10,12 +11,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Application.Reviews.Commands.CreateReview
 {
-    public record CreateReviewCommand : IRequest<Review>
+    public record CreateReviewCommand : UseAprizax, IRequest<Review>
     {
-        public Reaction Reaction { get; set; }
-        public string Comment { get; set; } = string.Empty;
-        public int User_Id { get; set; }
-        public int Food_Drink_Id { get; set; }
+        public Reaction? Reaction { get; set; } = null;
+        public int FoodDrinkId { get; set; }
     }
 
     public class CreateReviewCommandHandler : IRequestHandler<CreateReviewCommand, Review>
@@ -29,12 +28,18 @@ namespace CleanArchitecture.Application.Reviews.Commands.CreateReview
 
         public async Task<Review> Handle(CreateReviewCommand request, CancellationToken cancellationToken)
         {
+            if (request is null)
+                return null!;
+
+            var tokenInfo = request.GetTokenInfo();
+
+            if (tokenInfo.Is_Valid is false) return null!;
+
             var entity = new Review
             {
                 Reaction = request.Reaction,
-                Comment = request.Comment,
-                User_Id = request.User_Id,
-                Food_Drink_Id = request.Food_Drink_Id
+                User_Id = tokenInfo.Owner_Id ?? 0,
+                Food_Drink_Id = request.FoodDrinkId
             };
 
             _context.Reviews.Add(entity);

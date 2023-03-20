@@ -130,10 +130,11 @@ namespace CleanArchitecture.Application.Common.Context
 
         public static int GetDataComparison(int dataComparison1, int dataComparison2, int dataMaks)
         {
-            var data1 = dataComparison1 * dataComparison1 / dataMaks;
-            var data2 = dataComparison2 * dataComparison2 / dataMaks;
+            var dataPernilai = dataMaks / 2;
+            var data1 = dataComparison1 * dataPernilai / dataMaks;
+            var data2 = dataComparison2 * dataPernilai / dataMaks;
             var entity = data1 - data2;
-            return entity - 1;
+            return entity;
         }
 
         public static string GetFullPath(this string fileName, string folderName)
