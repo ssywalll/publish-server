@@ -81,6 +81,12 @@ namespace CleanArchitecture.Application.CreateOrders.Commands.CreateOrder
             var createdOrder = await _context.Orders
                 .FindAsync(new object[] { entity.Id }, cancellationToken);
 
+            if (request.OrderData.Payment!.ImageValidate() is false)
+                throw new NotFoundException("Ekstensi berkas bukan merupkan ekstensi gambar yang diperbolehkan", HttpStatusCode.BadRequest);
+
+            if (request.OrderData.Payment!.SizeValidate() is false)
+                throw new NotFoundException("Ukuran berkas melebihi 2MB", HttpStatusCode.BadRequest);
+
             var fileExtension = Path.GetExtension(request.OrderData.Payment!.FileName);
             var dateName = entity.Order_Time!.ToString("yyyy-MM-dd");
             var imageName = $"{entity.Id}-{entity.User_Id}-payment-{dateName}{fileExtension}";
