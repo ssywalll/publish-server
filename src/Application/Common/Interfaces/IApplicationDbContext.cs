@@ -27,5 +27,7 @@ public interface IApplicationDbContext
 
     DbSet<Tag> Tags { get; }
 
+    DbSet<Banner> Banners { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

@@ -47,6 +47,8 @@ public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, 
 
     public DbSet<Tag> Tags => Set<Tag>();
 
+    public DbSet<Banner> Banners => Set<Banner>();
+
     public DbSet<User> Users => Set<User>();
 
     protected override void OnModelCreating(ModelBuilder builder)
