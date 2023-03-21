@@ -1,13 +1,10 @@
-using CleanArchitecture.Domain.Entities;
 using MediatR;
 using CleanArchitecture.Application.Common.Context;
 using CleanArchitecture.Application.Common.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using CleanArchitecture.Application.Common.Exceptions;
 using System.Net;
-using System.IO;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
 

@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using CleanArchitecture.Application.Common.Context;
 using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Application.Common.Interfaces;
 using MediatR;
@@ -27,6 +24,8 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.DeleteFoodDrinkM
             );
             if (target is null)
                 throw new NotFoundException(nameof(FoodDrinkMenus), request.Id);
+
+            File.Delete(target.Image_Url.GetFullPath());
 
             _context.FoodDrinkMenus.Remove(target);
             await _context.SaveChangesAsync(cancellationToken);

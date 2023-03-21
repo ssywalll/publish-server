@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using CleanArchitecture.Application.Common.Context;
 using CleanArchitecture.Application.Common.Mappings;
 using CleanArchitecture.Domain.Entities;
