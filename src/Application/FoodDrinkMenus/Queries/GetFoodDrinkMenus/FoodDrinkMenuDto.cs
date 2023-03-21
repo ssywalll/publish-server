@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using CleanArchitecture.Application.Common.Mappings;
 using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Domain.Enums;
@@ -17,6 +18,16 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.GetFoodDrinkMenus
         public string Description { get; set; } = string.Empty;
         public string Image_Url { get; set; } = string.Empty;
         public type Type { get; set; }
+        public int Like { get; set; }
+        public int Ok { get; set; }
+        public int Dislike { get; set; }
 
+        public void Mapping(Profile profile)
+        {
+            profile.CreateMap<FoodDrinkMenu, FoodDrinkMenuDto>()
+                .ForMember(d => d.Like, opt => opt.MapFrom(s => s.Reviews!.Where(x => x.Food_Drink_Id == s.Id).Where(y => y.Reaction == Domain.Enums.Reaction.Like).Count()))
+                .ForMember(d => d.Ok, opt => opt.MapFrom(s => s.Reviews!.Where(x => x.Food_Drink_Id == s.Id).Where(y => y.Reaction == Domain.Enums.Reaction.Ok).Count()))
+                .ForMember(d => d.Dislike, opt => opt.MapFrom(s => s.Reviews!.Where(x => x.Food_Drink_Id == s.Id).Where(y => y.Reaction == Domain.Enums.Reaction.Dislike).Count()));
+        }
     }
 }

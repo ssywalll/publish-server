@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebUI.Controllers
 {
-    [Authorize]
     [ApiController]
     public class ReviewsController : ApiControllerBase
     {
@@ -37,7 +36,7 @@ namespace WebUI.Controllers
         public async Task<ActionResult<ReviewDto>> GetToken([FromHeader(Name = "Authorization")] GetReviewsByToken query)
         {
             return await Mediator.Send(query);
-        } 
+        }
 
         [HttpPost]
         public async Task<ActionResult<Review>> Create(CreateReviewCommand command)
