@@ -49,7 +49,7 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.CreateFoodDrinkM
                 Type = request.Type,
             };
 
-            if (request is null)
+            if (request.ImageUrl is null)
                 throw new NotFoundException("Request kosong", HttpStatusCode.BadRequest);
 
             var tokenInfo = request.GetTokenInfo();
@@ -57,28 +57,32 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.CreateFoodDrinkM
             if (tokenInfo.Is_Valid is false)
                 throw new NotFoundException("Token tidak valid", HttpStatusCode.BadRequest);
 
-
-
             if (request.ImageUrl.ImageValidate() is false)
                 throw new NotFoundException("Ekstensi berkas bukan merupkan ekstensi gambar yang diperbolehkan", HttpStatusCode.BadRequest);
 
             if (request.ImageUrl.SizeValidate() is false)
                 throw new NotFoundException("Ukuran berkas melebihi 2MB", HttpStatusCode.BadRequest);
 
+            _context.FoodDrinkMenus.Add(entity);
+            await _context.SaveChangesAsync(cancellationToken);
+
             var dateName = DateTime.Now.ToString("yyyy-MM-dd");
             var fileExtension = Path.GetExtension(request.ImageUrl!.FileName);
-            var fileName = $"{entity.Id}-avatar-{dateName}{fileExtension}";
+            var fileName = $"{entity.Id}-menu-{dateName}{fileExtension}";
             var myPath = Path.Combine("menu", fileName);
+
 
             using (var stream = File.Create(myPath.GetFullPath()))
             {
                 await request.ImageUrl.CopyToAsync(stream, cancellationToken);
             }
 
+
             entity.Image_Url = myPath;
 
-            return await Aprizax.Insert<FoodDrinkMenu>
-            (_context, _context.FoodDrinkMenus, entity, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return entity;
         }
 
         //konteks, tabel konteks, record baru, cancelationToken

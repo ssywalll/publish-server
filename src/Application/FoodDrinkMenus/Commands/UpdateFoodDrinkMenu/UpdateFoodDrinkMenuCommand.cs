@@ -34,10 +34,15 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.UpdateFoodDrinkM
 
         public async Task<FoodDrinkMenuDto> Handle(UpdateFoodDrinkMenuCommand request, CancellationToken cancellationToken)
         {
+            if (request is null)
+                throw new NotFoundException("Request anda kosong!", HttpStatusCode.BadRequest);
+            var tokenInfo = request.GetTokenInfo();
+            if (tokenInfo.Is_Valid is false)
+                throw new NotFoundException("Token anda tidak valid!", HttpStatusCode.BadRequest);
             var target = await _context.FoodDrinkMenus
                 .FindAsync(new object[] { request.Id }, cancellationToken);
 
-            if (target is null)
+            if (target == null)
                 throw new NotFoundException(nameof(FoodDrinkMenus), request.Id);
             _context.FoodDrinkMenus.Update(target);
 
@@ -51,6 +56,7 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.UpdateFoodDrinkM
                 await _context.SaveChangesAsync(cancellationToken);
 
                 return await _context.FoodDrinkMenus
+                .Where(x => x.Id.Equals(request.Id))
                 .AsNoTracking()
                 .ProjectTo<FoodDrinkMenuDto>(_mapper.ConfigurationProvider)
                 .SingleAsync(cancellationToken);
@@ -63,7 +69,7 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.UpdateFoodDrinkM
 
             var dateName = DateTime.Now.ToString("yyyy-MM-dd");
             var fileExtension = Path.GetExtension(request.ImageUrl!.FileName);
-            var fileName = $"{target.Id}-menu-{dateName}{fileExtension}";
+            var fileName = $"{request.Id}-menu-{dateName}{fileExtension}";
             var myPath = Path.Combine("menu", fileName);
 
             if (File.Exists(target.Image_Url.GetFullPath()))
@@ -79,6 +85,7 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.UpdateFoodDrinkM
             target.Image_Url = myPath;
 
             return await _context.FoodDrinkMenus
+               .Where(x => x.Id.Equals(request.Id))
                .AsNoTracking()
                .ProjectTo<FoodDrinkMenuDto>(_mapper.ConfigurationProvider)
                .SingleAsync(cancellationToken);

@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using CleanArchitecture.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using CleanArchitecture.WebUI.Controllers;
 using CleanArchitecture.Application.FoodDrinkMenus.Queries.GetFoodDrinkMenus;
@@ -42,13 +37,13 @@ namespace WebUI.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost("Post")]
-        public async Task<ActionResult<FoodDrinkMenu>> Create(CreateFoodDrinkMenuCommand command)
+        public async Task<ActionResult<FoodDrinkMenu>> Create([FromForm] CreateFoodDrinkMenuCommand command)
         {
             return Ok(await Mediator.Send(command));
         }
 
         [HttpPut("{id}/edit")]
-        public async Task<ActionResult> Update(int id, UpdateFoodDrinkMenuCommand command)
+        public async Task<ActionResult<FoodDrinkMenuDto>> Update(int id, [FromForm] UpdateFoodDrinkMenuCommand command)
         {
             if (id != command.Id)
             {

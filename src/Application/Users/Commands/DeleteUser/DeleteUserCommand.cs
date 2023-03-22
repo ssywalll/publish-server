@@ -27,7 +27,7 @@ namespace CleanArchitecture.Application.Users.Commands.DeleteUser
                 .Where(x => x.Id == request.Id)
                 .SingleOrDefaultAsync(cancellationToken);
 
-            if(entity == null)
+            if (entity == null)
             {
                 throw new NotFoundException(nameof(User), request.Id);
             }
