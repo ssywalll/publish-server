@@ -61,6 +61,8 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.UpdateFoodDrinkM
                 .ProjectTo<FoodDrinkMenuDto>(_mapper.ConfigurationProvider)
                 .SingleAsync(cancellationToken);
             }
+
+
             if (request.ImageUrl.ImageValidate() is false)
                 throw new NotFoundException("Ekstensi berkas bukan merupkan ekstensi gambar yang diperbolehkan", HttpStatusCode.BadRequest);
 
@@ -83,6 +85,8 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.UpdateFoodDrinkM
             }
 
             target.Image_Url = myPath;
+
+            await _context.SaveChangesAsync(cancellationToken);
 
             return await _context.FoodDrinkMenus
                .Where(x => x.Id.Equals(request.Id))
