@@ -50,6 +50,20 @@ namespace CleanArchitecture.Application.BankAccounts.Commands.CreateBankAccount
                 UserId = tokenInfo.Owner_Id ?? 0,
             };
 
+            var isHaveBank = await _context.BankAccounts
+                .Where(x => x.UserId.Equals(tokenInfo.Owner_Id))
+                .AsNoTracking()
+                .AnyAsync(cancellationToken);
+
+            if (isHaveBank)
+            {
+                var oldBank = await _context.BankAccounts
+                .Where(x => x.UserId.Equals(tokenInfo.Owner_Id))
+                .SingleAsync(cancellationToken);
+
+                oldBank.IsChoosen = false;
+            }
+
             _context.BankAccounts.Add(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
