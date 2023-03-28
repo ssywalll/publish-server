@@ -47,9 +47,9 @@ namespace WebUI.Controllers
         }
 
         [HttpGet("DataGraph")]
-        public async Task<ActionResult<DataGraphVm>> GetDataGraph()
+        public async Task<ActionResult<DataGraphVm>> GetDataGraph([FromQuery] GetDataGraph query)
         {
-            return await Mediator.Send(new GetDataGraph());
+            return await Mediator.Send(query);
         }
 
 

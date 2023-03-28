@@ -1,20 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Globalization;
 using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Application.Common.Exceptions;
 using CleanArchitecture.Domain.Entities;
-using CleanArchitecture.Domain.Enums;
-using CleanArchitecture.Domain.Common;
-using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -130,7 +121,7 @@ namespace CleanArchitecture.Application.Common.Context
 
         public static int GetDataComparison(int dataComparison1, int dataComparison2, int dataMaks)
         {
-        
+
             var dataPernilai = dataMaks / 2;
             var data1 = dataComparison1 == 0 ? 0 : dataComparison1 * dataPernilai / dataMaks;
             var data2 = dataComparison2 == 0 ? 0 : dataComparison2 * dataPernilai / dataMaks;
