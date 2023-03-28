@@ -41,6 +41,22 @@ namespace CleanArchitecture.Application.BankAccounts.Commands.DeleteBankAccount
 
             _context.BankAccounts.Remove(entity);
 
+            var bankCount = await _context.BankAccounts
+                .Where(x => x.UserId.Equals(tokenInfo.Owner_Id))
+                .AsNoTracking()
+                .CountAsync(cancellationToken);
+
+            if (bankCount == 2)
+            {
+                var lastBank = await _context.BankAccounts
+                .Where(
+                    x => (x.UserId.Equals(tokenInfo.Owner_Id)) && !(x.Id.Equals(request.Id))
+                )
+                .SingleAsync(cancellationToken);
+
+                lastBank.IsChoosen = true;
+            }
+
             await _context.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
