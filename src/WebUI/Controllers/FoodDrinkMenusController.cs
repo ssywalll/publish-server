@@ -42,14 +42,9 @@ namespace WebUI.Controllers
             return Ok(await Mediator.Send(command));
         }
 
-        [HttpPut("{id}/edit")]
-        public async Task<ActionResult<FoodDrinkMenuDto>> Update(int id, [FromForm] UpdateFoodDrinkMenuCommand command)
+        [HttpPut("edit")]
+        public async Task<ActionResult<FoodDrinkMenuDto>> Update([FromForm] UpdateFoodDrinkMenuCommand command)
         {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
-
             await Mediator.Send(command);
 
             return Ok();
