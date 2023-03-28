@@ -19,6 +19,7 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.GetFoodDrinkMenus
     {
         public string? Keyword { get; init; }
         public string? SortBy { get; init; }
+        public int Filter { get; init; } = 2;
         public bool IsAsc { get; init; } = true;
         public int PageNumber { get; init; } = 1;
         public int PageSize { get; init; } = 10;
@@ -56,6 +57,17 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Queries.GetFoodDrinkMenus
                     foodDrinkTable = foodDrinkTable.OrderBySwitch(x => x.Created, request.IsAsc);
                     break;
             }
+
+            switch (request.Filter)
+            {
+                case 0:
+                    foodDrinkTable = foodDrinkTable.Where(x => x.Type == 0);
+                    break;
+                case 1:
+                    foodDrinkTable = foodDrinkTable.Where(x => x.Type == Domain.Enums.type.Drink);
+                    break;
+            }
+
             return await foodDrinkTable
                .ProjectTo<FoodDrinkMenuDto>(_mapper.ConfigurationProvider)
                .PaginatedListAsync(request.PageNumber, request.PageSize);
