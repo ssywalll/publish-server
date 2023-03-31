@@ -30,15 +30,23 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Bank_Name")
+                    b.Property<string>("BankName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("BankNumber")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsChoosen")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("timestamp without time zone");
@@ -48,17 +56,51 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
-                    b.Property<int>("Number")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("User_Id")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("BankAccounts");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Banner", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Link")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Subject")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Banners");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.Cart", b =>
@@ -78,6 +120,9 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                     b.Property<int>("Food_Drink_Id")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsChecked")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("timestamp without time zone");
 
@@ -85,12 +130,17 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<int>("Quantity")
+                        .HasMaxLength(200)
                         .HasColumnType("integer");
 
                     b.Property<int>("User_Id")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Food_Drink_Id");
+
+                    b.HasIndex("User_Id");
 
                     b.ToTable("Carts");
                 });
@@ -133,6 +183,9 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                     b.Property<float>("Price")
                         .HasColumnType("real");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.ToTable("FoodDrinkMenus");
@@ -161,10 +214,17 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
 
-                    b.Property<int>("Order_Number")
+                    b.Property<int>("Order_Id")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Food_Drink_Id");
+
+                    b.HasIndex("Order_Id");
 
                     b.ToTable("FoodDrinkOrders");
                 });
@@ -208,10 +268,15 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
-                    b.Property<int>("Bank_Number")
+                    b.Property<int>("BankAccount_Id")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Bank_Number")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp without time zone");
@@ -226,10 +291,8 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Meal_Date")
+                        .HasMaxLength(25)
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<int>("Number")
-                        .HasColumnType("integer");
 
                     b.Property<DateTime>("Order_Time")
                         .HasColumnType("timestamp without time zone");
@@ -246,6 +309,10 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BankAccount_Id");
+
+                    b.HasIndex("User_Id");
+
                     b.ToTable("Orders");
                 });
 
@@ -259,7 +326,8 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Comment")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp without time zone");
@@ -276,43 +344,19 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("text");
 
-                    b.Property<int>("Reaction")
+                    b.Property<int?>("Reaction")
                         .HasColumnType("integer");
 
                     b.Property<int>("User_Id")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Food_Drink_Id");
+
+                    b.HasIndex("User_Id");
 
                     b.ToTable("Reviews");
-                });
-
-            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("text");
-
-                    b.Property<int>("User_Id")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.Tag", b =>
@@ -340,9 +384,12 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Food_Drink_Id");
 
                     b.ToTable("Tags");
                 });
@@ -438,7 +485,8 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<int>("Gender")
                         .HasColumnType("integer");
@@ -451,16 +499,24 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
-                    b.Property<int>("Phone")
-                        .HasColumnType("integer");
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Picture_Url")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -810,6 +866,114 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.BankAccount", b =>
+                {
+                    b.HasOne("CleanArchitecture.Domain.Entities.User", "Users")
+                        .WithMany("BankAccounts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("Fk_BankAccount_User");
+
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Cart", b =>
+                {
+                    b.HasOne("CleanArchitecture.Domain.Entities.FoodDrinkMenu", "FoodDrinkMenu")
+                        .WithMany("Carts")
+                        .HasForeignKey("Food_Drink_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("Fk_Cart_FoodDrinkMenu");
+
+                    b.HasOne("CleanArchitecture.Domain.Entities.User", "User")
+                        .WithMany("Carts")
+                        .HasForeignKey("User_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("Fk_Cart_User");
+
+                    b.Navigation("FoodDrinkMenu");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.FoodDrinkOrder", b =>
+                {
+                    b.HasOne("CleanArchitecture.Domain.Entities.FoodDrinkMenu", "FoodDrinkMenus")
+                        .WithMany("FoodDrinkOrders")
+                        .HasForeignKey("Food_Drink_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("Fk_FoodDrinkOrder_FoodDrinkMenu");
+
+                    b.HasOne("CleanArchitecture.Domain.Entities.Order", "Orders")
+                        .WithMany("FoodDrinkOrders")
+                        .HasForeignKey("Order_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("Fk_FoodDrinkOrder_Order");
+
+                    b.Navigation("FoodDrinkMenus");
+
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Order", b =>
+                {
+                    b.HasOne("CleanArchitecture.Domain.Entities.BankAccount", "BankAccounts")
+                        .WithMany("Orders")
+                        .HasForeignKey("BankAccount_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("Fk_Order_BankAccount");
+
+                    b.HasOne("CleanArchitecture.Domain.Entities.User", "users")
+                        .WithMany("Orders")
+                        .HasForeignKey("User_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("Fk_Order_User");
+
+                    b.Navigation("BankAccounts");
+
+                    b.Navigation("users");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Review", b =>
+                {
+                    b.HasOne("CleanArchitecture.Domain.Entities.FoodDrinkMenu", "FoodDrinkMenu")
+                        .WithMany("Reviews")
+                        .HasForeignKey("Food_Drink_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("Fk_Review_FoodDrinkMenu");
+
+                    b.HasOne("CleanArchitecture.Domain.Entities.User", "User")
+                        .WithMany("Reviews")
+                        .HasForeignKey("User_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("Fk_Review_User");
+
+                    b.Navigation("FoodDrinkMenu");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Tag", b =>
+                {
+                    b.HasOne("CleanArchitecture.Domain.Entities.FoodDrinkMenu", "FoodDrinkMenus")
+                        .WithMany("Tags")
+                        .HasForeignKey("Food_Drink_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("Fk_Tag_FoodDrinkMenu");
+
+                    b.Navigation("FoodDrinkMenus");
+                });
+
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.TodoItem", b =>
                 {
                     b.HasOne("CleanArchitecture.Domain.Entities.TodoList", "List")
@@ -895,9 +1059,41 @@ namespace CleanArchitecture.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.BankAccount", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.FoodDrinkMenu", b =>
+                {
+                    b.Navigation("Carts");
+
+                    b.Navigation("FoodDrinkOrders");
+
+                    b.Navigation("Reviews");
+
+                    b.Navigation("Tags");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.Order", b =>
+                {
+                    b.Navigation("FoodDrinkOrders");
+                });
+
             modelBuilder.Entity("CleanArchitecture.Domain.Entities.TodoList", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("CleanArchitecture.Domain.Entities.User", b =>
+                {
+                    b.Navigation("BankAccounts");
+
+                    b.Navigation("Carts");
+
+                    b.Navigation("Orders");
+
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

@@ -22,8 +22,6 @@ namespace CleanArchitecture.Application.FoodDrinkMenus.Commands.CreateFoodDrinkM
         public int Min_Order { get; init; }
         public string Description { get; init; } = string.Empty;
         public type Type { get; init; }
-
-        [FileExtensions(Extensions = "jpg,png,jpeg")]
         public IFormFile? ImageUrl { get; set; }
     }
 
