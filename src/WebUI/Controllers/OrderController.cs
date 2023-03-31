@@ -92,5 +92,11 @@ namespace WebUI.Controllers
             await Mediator.Send(command);
             return NoContent();
         }
+        [HttpPut("StatusControl")]
+        public async Task<ActionResult> StatusControl(OrderStatusFullChange command)
+        {
+            await Mediator.Send(command);
+            return NoContent();
+        }
     }
 }
